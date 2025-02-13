@@ -1,16 +1,22 @@
 package model;
 
 public class Song {
-	String name;
-	String artist;
-	int rating;
-	boolean favorite;
+	private String name;
+	private String artist;
+	private String album;
+	private int rating;
+	private boolean favorite;
 	
-	public Song(String name, String artist) {
+	public Song(String name, String artist, String album) {
 		this.name = name;
 		this.artist = artist;
+		this.album = album;
 		this.rating = 0;
 		this.favorite = false;
+	}
+	
+	public String getName() {
+		return this.name;
 	}
 	
 	public void rate(int rating) {
@@ -22,6 +28,10 @@ public class Song {
 	
 	public void favorite(boolean favorite) {
 		this.favorite = favorite;
+	}
+	
+	public String toString() {
+		return "Title: " + name + ", Album: " + album + ", Artist: " + artist;
 	}
 	
 }
