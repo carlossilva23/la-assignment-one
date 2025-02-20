@@ -19,6 +19,10 @@ public class Song {
 		return this.name;
 	}
 	
+	public String getArtist() {
+		return this.artist;
+	}
+	
 	public void rate(int rating) {
 		this.rating = rating;
 		if (rating == 5) {
