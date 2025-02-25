@@ -19,7 +19,7 @@ public class MusicStore {
 	            library.add(new Album(data[0], data[1]));
 	        }
 	    } catch (Exception e) {
-	        System.out.println("Library scan failed. Go fuck yourself.");
+	        System.out.println("Library file scan failed.");
 	    }
 		
 		boolean firstLine;
@@ -38,7 +38,7 @@ public class MusicStore {
 		            }
 		        }
 		    } catch (Exception e) {
-		        System.out.println("Album scan failed. Go fuck yourself.");
+		        System.out.println("Album scan failed.");
 		        e.printStackTrace();
 		    }
 		}
