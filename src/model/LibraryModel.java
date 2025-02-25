@@ -4,18 +4,20 @@ import java.util.ArrayList;
 
 public class LibraryModel {
 	private ArrayList<Playlist> Library = new ArrayList<>();
+	private MusicStore store;
 	
 	public LibraryModel() {
 		Library = new ArrayList<>();
 		Library.add(new Playlist("Singles"));
 	}
 	
-	public void addSong(Song song) {
-
+	public void addSong(String song) {
+		searchPlaylist("Singles").addSong(store.getSong(song));
+		
 	}
 	
-	public void addAlbum(Album album) {
-
+	public void addAlbum(String album) {
+		Library.add(store.getAlbum(album));
 	}
 		
 	public Song searchSongByTitle(String title) {
