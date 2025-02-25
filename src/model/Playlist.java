@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Playlist {
 	private String name;
-	private ArrayList<Song> songs;
+	private ArrayList<Song> songs = new ArrayList<>();
 	
 	public Playlist(String name) {
 		this.name = name;
@@ -30,7 +30,7 @@ public class Playlist {
 		return new ArrayList<>(songs);
 	}
 	
-	public void printPlaylist() {
+	public void print() {
 		System.out.println(this.name + ":");
 		for (Song song : songs) {
 			System.out.println(song);
