@@ -46,7 +46,7 @@ public class MusicStore {
 
 	public Album getAlbum(String name) {
 		for (Album album : library) {
-			if (album.getName().equals(name)) return album;
+			if (album.getName().equalsIgnoreCase(name)) return album;
 		}
 		return null;
 	}
@@ -54,9 +54,13 @@ public class MusicStore {
 	public Song getSong(String name) {
 		for (Album album : library) {
 			for (Song song : album.getSongs()) {
-				if (song.getName().equals(name)) return song;
+				if (song.getName().equalsIgnoreCase(name)) return song;
 			}
 		}
 		return null;
 	}
+	
+	public ArrayList<Album> getLibrary() {
+        return library;
+    }
 }
