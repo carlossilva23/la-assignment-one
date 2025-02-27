@@ -1,7 +1,11 @@
 package view;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 import model.LibraryModel;
+import model.Playlist;
+import model.Song;
+import model.Album;
 
 public class LibraryView {
     public static void main(String[] args) {
@@ -35,85 +39,184 @@ public class LibraryView {
             System.out.println("0. Exit");
             System.out.print("Enter your choice: ");
             
-            String input = scanner.nextLine();
-            int choice;
-            try {
-                choice = Integer.parseInt(input);
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input, please try again.");
-                continue;
-            }
-            
+            int choice = Integer.parseInt(scanner.nextLine());
             switch (choice) {
                 case 1:
-                    System.out.print("Enter song title: ");
-                    String songTitle = scanner.nextLine();
-                    model.printSongByTitle(songTitle);
+                    System.out.print("Enter song title (Library): ");
+                    String libSongTitle = scanner.nextLine();
+                    ArrayList<Song> libSongs = model.searchLibrarySongByTitle(libSongTitle);
+                    if (libSongs.isEmpty()) {
+                        System.out.println("Song not found in library.");
+                    } else {
+                        for (Song s : libSongs) {
+                            System.out.println(s);
+                        }
+                    }
                     break;
                 case 2:
-                    System.out.print("Enter artist name: ");
-                    String artist = scanner.nextLine();
-                    model.printSongsByArtist(artist);
+                    System.out.print("Enter artist name (Library): ");
+                    String libArtist = scanner.nextLine();
+                    ArrayList<Song> songsByArtist = model.searchLibrarySongsByArtist(libArtist);
+                    if (songsByArtist.isEmpty()) {
+                        System.out.println("No songs found for artist " + libArtist);
+                    } else {
+                        for (Song s : songsByArtist) {
+                            System.out.println(s);
+                        }
+                    }
                     break;
                 case 3:
-                    System.out.print("Enter album title: ");
-                    String albumTitle = scanner.nextLine();
-                    model.printAlbumByTitle(albumTitle);
+                    System.out.print("Enter album title (Library): ");
+                    String libAlbumTitle = scanner.nextLine();
+                    Album libAlbum = model.searchLibraryAlbumByTitle(libAlbumTitle);
+                    if (libAlbum == null) {
+                        System.out.println("Album not found in library.");
+                    } else {
+                        libAlbum.print();
+                    }
                     break;
                 case 4:
-                    System.out.print("Enter album artist: ");
-                    String albumArtist = scanner.nextLine();
-                    model.printAlbumsByArtist(albumArtist);
+                    System.out.print("Enter album artist (Library): ");
+                    String libAlbumArtist = scanner.nextLine();
+                    ArrayList<Album> albumsByArtist = model.searchLibraryAlbumsByArtist(libAlbumArtist);
+                    if (albumsByArtist.isEmpty()) {
+                        System.out.println("No albums found for artist " + libAlbumArtist);
+                    } else {
+                        for (Album a : albumsByArtist) {
+                            a.print();
+                        }
+                    }
                     break;
                 case 5:
                     System.out.print("Enter playlist name: ");
                     String playlistName = scanner.nextLine();
-                    model.printPlaylistByName(playlistName);
+                    ArrayList<Playlist> allPlaylists = model.getAllPlaylists();
+                    boolean foundPlaylist = false;
+                    for (Playlist p : allPlaylists) {
+                        if (p.getName().equalsIgnoreCase(playlistName)) {
+                            p.print();
+                            foundPlaylist = true;
+                            break;
+                        }
+                    }
+                    if (!foundPlaylist) {
+                        System.out.println("Playlist " + playlistName + " not found.");
+                    }
                     break;
                 case 6:
                     System.out.print("Enter song title to add to library: ");
-                    String addSong = scanner.nextLine();
-                    model.addSong(addSong);
+                    String songTitleToAdd = scanner.nextLine();
+                    ArrayList<Song> storeMatches = model.getStoreSongsByTitle(songTitleToAdd);
+                    if (storeMatches.isEmpty()) {
+                        System.out.println("Song not found in MusicStore.");
+                    } else if (storeMatches.size() == 1) {
+                        model.addSong(storeMatches.get(0));
+                        System.out.println("Added: " + storeMatches.get(0));
+                    } else {
+                        System.out.println("Multiple songs found in MusicStore:");
+                        for (int i = 0; i < storeMatches.size(); i++) {
+                            System.out.println(i + ": " + storeMatches.get(i));
+                        }
+                        System.out.print("Enter the index of the song to add: ");
+                        int index = Integer.parseInt(scanner.nextLine());
+                        if (index >= 0 && index < storeMatches.size()) {
+                            model.addSong(storeMatches.get(index));
+                            System.out.println("Added: " + storeMatches.get(index));
+                        } else {
+                            System.out.println("Invalid selection.");
+                        }
+                    }
                     break;
                 case 7:
-                    System.out.print("Enter album title to add: ");
-                    String addAlbum = scanner.nextLine();
-                    model.addAlbum(addAlbum);
+                    System.out.print("Enter album title to add to library: ");
+                    String albumToAdd = scanner.nextLine();
+                    model.addAlbum(albumToAdd);
+                    System.out.println("Album added (if found).");
                     break;
                 case 8:
-                    model.printSongs();
+                    ArrayList<Song> allSongs = model.getAllSongs();
+                    for (Song s : allSongs) {
+                        System.out.println(s);
+                    }
                     break;
                 case 9:
-                    model.printArtists();
+                    ArrayList<String> allArtists = model.getAllArtists();
+                    for (String a : allArtists) {
+                        System.out.println(a);
+                    }
                     break;
                 case 10:
-                    model.printAlbums();
+                    ArrayList<Album> allAlbums = model.getAllAlbums();
+                    for (Album a : allAlbums) {
+                        System.out.println(a);
+                    }
                     break;
                 case 11:
-                    model.printPlaylists();
+                    ArrayList<Playlist> allPlaylistsList = model.getAllPlaylists();
+                    for (Playlist p : allPlaylistsList) {
+                        System.out.println(p.getName());
+                    }
                     break;
                 case 12:
-                    model.printFavorites();
+                    ArrayList<Song> favSongs = model.getFavoriteSongs();
+                    for (Song s : favSongs) {
+                        System.out.println(s);
+                    }
                     break;
                 case 13:
                     System.out.print("Enter new playlist name: ");
                     String newPlaylist = scanner.nextLine();
                     model.createPlaylist(newPlaylist);
+                    System.out.println("Playlist created.");
                     break;
                 case 14:
-                    System.out.print("Enter song title to mark as favorite: ");
-                    String favSong = scanner.nextLine();
-                    model.setFavorite(favSong);
+                    System.out.print("Enter song title to mark as favorite (Library): ");
+                    String songTitleToFavorite = scanner.nextLine();
+                    ArrayList<Song> libraryMatchesForFav = model.getLibrarySongsByTitle(songTitleToFavorite);
+                    if (libraryMatchesForFav.isEmpty()) {
+                        System.out.println("Song not found in library.");
+                    } else if (libraryMatchesForFav.size() == 1) {
+                        model.favoriteSong(libraryMatchesForFav.get(0));
+                        System.out.println("Marked as favorite: " + libraryMatchesForFav.get(0));
+                    } else {
+                        System.out.println("Multiple songs found in library:");
+                        for (int i = 0; i < libraryMatchesForFav.size(); i++) {
+                            System.out.println(i + ": " + libraryMatchesForFav.get(i));
+                        }
+                        System.out.print("Enter the index of the song to mark as favorite: ");
+                        int favIndex = Integer.parseInt(scanner.nextLine());
+                        if (favIndex >= 0 && favIndex < libraryMatchesForFav.size()) {
+                            model.favoriteSong(libraryMatchesForFav.get(favIndex));
+                            System.out.println("Marked as favorite: " + libraryMatchesForFav.get(favIndex));
+                        } else {
+                            System.out.println("Invalid selection.");
+                        }
+                    }
                     break;
                 case 15:
-                    System.out.print("Enter song title to rate: ");
-                    String rateSong = scanner.nextLine();
+                    System.out.print("Enter song title to rate (Library): ");
+                    String songTitleToRate = scanner.nextLine();
                     System.out.print("Enter rating (1-5): ");
-                    try {
-                        int rating = Integer.parseInt(scanner.nextLine());
-                        model.rate(rateSong, rating);
-                    } catch (NumberFormatException e) {
-                        System.out.println("Invalid rating input.");
+                    int rating = Integer.parseInt(scanner.nextLine());
+                    ArrayList<Song> libraryMatchesForRate = model.getLibrarySongsByTitle(songTitleToRate);
+                    if (libraryMatchesForRate.isEmpty()) {
+                        System.out.println("Song not found in library.");
+                    } else if (libraryMatchesForRate.size() == 1) {
+                        model.rateSong(libraryMatchesForRate.get(0), rating);
+                        System.out.println("Rated: " + libraryMatchesForRate.get(0));
+                    } else {
+                        System.out.println("Multiple songs found in library:");
+                        for (int i = 0; i < libraryMatchesForRate.size(); i++) {
+                            System.out.println(i + ": " + libraryMatchesForRate.get(i));
+                        }
+                        System.out.print("Enter the index of the song to rate: ");
+                        int rateIndex = Integer.parseInt(scanner.nextLine());
+                        if (rateIndex >= 0 && rateIndex < libraryMatchesForRate.size()) {
+                            model.rateSong(libraryMatchesForRate.get(rateIndex), rating);
+                            System.out.println("Rated: " + libraryMatchesForRate.get(rateIndex));
+                        } else {
+                            System.out.println("Invalid selection.");
+                        }
                     }
                     break;
                 case 16:
@@ -121,7 +224,26 @@ public class LibraryView {
                     String plName = scanner.nextLine();
                     System.out.print("Enter song title to add to playlist: ");
                     String songToAdd = scanner.nextLine();
-                    model.addSongToPlaylist(plName, songToAdd);
+                    ArrayList<Song> storeMatchesForPl = model.getStoreSongsByTitle(songToAdd);
+                    if (storeMatchesForPl.isEmpty()) {
+                        System.out.println("Song not found in MusicStore.");
+                    } else if (storeMatchesForPl.size() == 1) {
+                        model.addSongToPlaylist(plName, storeMatchesForPl.get(0));
+                        System.out.println("Added to playlist: " + storeMatchesForPl.get(0));
+                    } else {
+                        System.out.println("Multiple songs found in MusicStore:");
+                        for (int i = 0; i < storeMatchesForPl.size(); i++) {
+                            System.out.println(i + ": " + storeMatchesForPl.get(i));
+                        }
+                        System.out.print("Enter the index of the song to add: ");
+                        int index = Integer.parseInt(scanner.nextLine());
+                        if (index >= 0 && index < storeMatchesForPl.size()) {
+                            model.addSongToPlaylist(plName, storeMatchesForPl.get(index));
+                            System.out.println("Added to playlist: " + storeMatchesForPl.get(index));
+                        } else {
+                            System.out.println("Invalid selection.");
+                        }
+                    }
                     break;
                 case 17:
                     System.out.print("Enter playlist name: ");
@@ -129,26 +251,53 @@ public class LibraryView {
                     System.out.print("Enter song title to remove from playlist: ");
                     String songToRemove = scanner.nextLine();
                     model.removeSongFromPlaylist(plNameRemove, songToRemove);
+                    System.out.println("Removed song (if present) from playlist.");
                     break;
                 case 18:
                     System.out.print("Enter song title to search in MusicStore: ");
                     String storeSong = scanner.nextLine();
-                    model.searchStoreSongByTitle(storeSong);
+                    ArrayList<Song> storeSearchSongs = model.searchStoreSongByTitle(storeSong);
+                    if (storeSearchSongs.isEmpty()) {
+                        System.out.println("Song not found in MusicStore.");
+                    } else {
+                        for (Song s : storeSearchSongs) {
+                            System.out.println(s);
+                        }
+                    }
                     break;
                 case 19:
                     System.out.print("Enter artist name to search in MusicStore: ");
                     String storeArtist = scanner.nextLine();
-                    model.searchStoreSongsByArtist(storeArtist);
+                    ArrayList<Song> storeSearchByArtist = model.searchStoreSongsByArtist(storeArtist);
+                    if (storeSearchByArtist.isEmpty()) {
+                        System.out.println("No songs by " + storeArtist + " found in MusicStore.");
+                    } else {
+                        for (Song s : storeSearchByArtist) {
+                            System.out.println(s);
+                        }
+                    }
                     break;
                 case 20:
                     System.out.print("Enter album title to search in MusicStore: ");
                     String storeAlbum = scanner.nextLine();
-                    model.searchStoreAlbumByTitle(storeAlbum);
+                    Album storeAlbumResult = model.searchStoreAlbumByTitle(storeAlbum);
+                    if (storeAlbumResult == null) {
+                        System.out.println("Album not found in MusicStore.");
+                    } else {
+                        storeAlbumResult.print();
+                    }
                     break;
                 case 21:
                     System.out.print("Enter album artist to search in MusicStore: ");
                     String storeAlbumArtist = scanner.nextLine();
-                    model.searchStoreAlbumsByArtist(storeAlbumArtist);
+                    ArrayList<Album> storeAlbumsByArtist = model.searchStoreAlbumsByArtist(storeAlbumArtist);
+                    if (storeAlbumsByArtist.isEmpty()) {
+                        System.out.println("No albums by " + storeAlbumArtist + " found in MusicStore.");
+                    } else {
+                        for (Album a : storeAlbumsByArtist) {
+                            a.print();
+                        }
+                    }
                     break;
                 case 0:
                     running = false;

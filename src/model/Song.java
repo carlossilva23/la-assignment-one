@@ -39,7 +39,7 @@ public class Song {
 	}
 	
 	public String toString() {
-		return "Title: " + name + ", Album: " + album + ", Artist: " + artist;
+		return "Title: " + name + ", Album: " + album + ", Artist: " + artist + ", Rating: " + rating;
 	}
 	
 }

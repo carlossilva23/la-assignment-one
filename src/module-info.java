@@ -4,5 +4,3 @@
 /**
  * 
  */
-module longAssignment1 {
-}

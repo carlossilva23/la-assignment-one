@@ -29,4 +29,8 @@ public class Album extends Playlist {
             System.out.println("  - " + song.getName());
         }
     }
+    
+    public String toString() {
+    	return getName() + " by " + artist + " (" + year + ", " + genre + ")";
+    }
 }

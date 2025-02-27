@@ -60,7 +60,45 @@ public class MusicStore {
 		return null;
 	}
 	
-	public ArrayList<Album> getLibrary() {
-        return library;
+	public ArrayList<Song> getSongsByTitle(String title) {
+        ArrayList<Song> matches = new ArrayList<>();
+        for (Album album : library) {
+            for (Song song : album.getSongs()) {
+                if (song.getName().equalsIgnoreCase(title)) {
+                    matches.add(song);
+                }
+            }
+        }
+        return matches;
+    }
+    
+    public ArrayList<Song> searchSongByTitle(String title) {
+        return getSongsByTitle(title);
+    }
+    
+    public ArrayList<Song> searchSongsByArtist(String artist) {
+        ArrayList<Song> matches = new ArrayList<>();
+        for (Album album : library) {
+            for (Song song : album.getSongs()) {
+                if (song.getArtist().equalsIgnoreCase(artist)) {
+                    matches.add(song);
+                }
+            }
+        }
+        return matches;
+    }
+    
+    public Album searchAlbumByTitle(String albumTitle) {
+        return getAlbum(albumTitle);
+    }
+    
+    public ArrayList<Album> searchAlbumsByArtist(String artist) {
+        ArrayList<Album> matches = new ArrayList<>();
+        for (Album album : library) {
+            if (album.getArtist().equalsIgnoreCase(artist)) {
+                matches.add(album);
+            }
+        }
+        return matches;
     }
 }
