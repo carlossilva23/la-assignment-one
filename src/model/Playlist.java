@@ -34,10 +34,12 @@ public class Playlist {
         return new ArrayList<>(songs);
     }
     
-    public void print() {
-        System.out.println(name + ":");
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(name).append(":");
         for (Song song : songs) {
-            System.out.println("  " + song);
+            sb.append("\n  ").append(song.toString());
         }
+        return sb.toString();
     }
 }

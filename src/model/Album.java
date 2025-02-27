@@ -31,6 +31,11 @@ public class Album extends Playlist {
     }
     
     public String toString() {
-    	return getName() + " by " + artist + " (" + year + ", " + genre + ")";
+        StringBuilder sb = new StringBuilder();
+        sb.append(getName() + " by " + artist + " (" + year + ", " + genre + ")\nSongs:");
+        for (Song song : super.getSongs()) {
+            sb.append("\n  - ").append(song.getName());
+        }
+        return sb.toString();
     }
 }

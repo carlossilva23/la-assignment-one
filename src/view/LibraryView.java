@@ -72,7 +72,7 @@ public class LibraryView {
                     if (libAlbum == null) {
                         System.out.println("Album not found in library.");
                     } else {
-                        libAlbum.print();
+                        System.out.println(libAlbum);
                     }
                     break;
                 case 4:
@@ -83,7 +83,7 @@ public class LibraryView {
                         System.out.println("No albums found for artist " + libAlbumArtist);
                     } else {
                         for (Album a : albumsByArtist) {
-                            a.print();
+                            System.out.println(a);
                         }
                     }
                     break;
@@ -94,7 +94,7 @@ public class LibraryView {
                     boolean foundPlaylist = false;
                     for (Playlist p : allPlaylists) {
                         if (p.getName().equalsIgnoreCase(playlistName)) {
-                            p.print();
+                            System.out.println(p);
                             foundPlaylist = true;
                             break;
                         }
@@ -154,7 +154,7 @@ public class LibraryView {
                 case 11:
                     ArrayList<Playlist> allPlaylistsList = model.getAllPlaylists();
                     for (Playlist p : allPlaylistsList) {
-                        System.out.println(p.getName());
+                        System.out.println(p);
                     }
                     break;
                 case 12:
