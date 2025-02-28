@@ -16,7 +16,7 @@ public class LibraryModel {
     }
     
     public ArrayList<Song> getStoreSongsByTitle(String title) {
-        return store.getSongsByTitle(title);
+        return store.getSongsByTitle(title); 
     }
     
     public ArrayList<Song> getLibrarySongsByTitle(String title) {

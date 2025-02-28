@@ -19,7 +19,7 @@ public class MusicStore {
 	            getLibrary().add(new Album(data[0], data[1]));
 	        }
 	    } catch (Exception e) {
-	        System.out.println("Library file scan failed.");
+	        System.out.println("Library file scan failed."); 
 	    }
 		
 		boolean firstLine;
