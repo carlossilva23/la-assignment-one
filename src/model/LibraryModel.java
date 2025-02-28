@@ -12,7 +12,7 @@ public class LibraryModel {
         singles = new Playlist("Singles");
         userPlaylists = new ArrayList<>();
         albumLibrary = new ArrayList<>();
-        store = new MusicStore();
+        store = new MusicStore();  
     }
     
     public ArrayList<Song> getStoreSongsByTitle(String title) {
@@ -71,7 +71,7 @@ public class LibraryModel {
     
     public void addSongToPlaylist(String playlistName, Song song) {
         Playlist playlist = getUserPlaylist(playlistName);
-        if (playlist != null && song != null) {
+        if (playlist != null && song != null) {  
             playlist.addSong(song);
         }
     }
@@ -83,7 +83,7 @@ public class LibraryModel {
         }
     }
     
-    private Playlist getUserPlaylist(String playlistName) {
+    public Playlist getUserPlaylist(String playlistName) {
         for (Playlist p : userPlaylists) {
             if (p.getName().equalsIgnoreCase(playlistName)) {
                 return p;

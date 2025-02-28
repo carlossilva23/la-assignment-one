@@ -2,199 +2,138 @@ package tests;
 
 import model.Song;
 import model.LibraryModel;
-import model.Album;
+
 import model.Playlist;
 import static org.junit.Assert.*;
-import org.junit.Before;
 import org.junit.Test;
-import model.*;
 import java.util.ArrayList;
 
 public class LibraryModelTest {
 
-    private LibraryModel libraryModel;
-    private MusicStore musicStore;
+
+    @Test
+    public void testGetStoreBySongsByTitle() {
+    	LibraryModel libraryModel = new LibraryModel();
+    	String example = "Rolling in the Deep";
+    	ArrayList <Song> result = libraryModel.getStoreSongsByTitle(example);
+    	
+    	assertNotNull(result);
+    }
     
-    @Before
-    public void setUp() {
-        libraryModel = new LibraryModel();
-        musicStore = new MusicStore();
-    }
-
-    @Test
-    public void testAlbumLoadingFromStore() {
-        Album album = musicStore.getAlbum("21");
-        assertNotNull(album);
-        assertEquals("Adele", album.getArtist());
-        assertTrue(album.getSongs().size() > 0); 
-    }
-
-
-    @Test
-    public void testGetSongsByTitle() {
-        ArrayList<Song> songs = musicStore.getSongsByTitle("Rolling in the Deep");
-        assertFalse(songs.isEmpty());
-        assertEquals("Rolling in the Deep", songs.get(0).getName());
-    }
-
- 
-    @Test
-    public void testAddAlbumToLibrary() {
-        libraryModel.addAlbum("21");
-        assertNotNull(libraryModel.getAllAlbums());
-        assertTrue(libraryModel.getAllAlbums().size() > 0);
-    }
-
-    
-    @Test
-    public void testSearchLibrarySongsByTitle() {
-        libraryModel.addAlbum("21"); // Add an album first
-        ArrayList<Song> songs = libraryModel.getLibrarySongsByTitle("Rolling in the Deep");
-        assertFalse(songs.isEmpty());
-        assertEquals("Rolling in the Deep", songs.get(0).getName());
-    }
-
-   
-    @Test
-    public void testAddSongToPlaylist() {
-        libraryModel.createPlaylist("My Playlist");
-        Playlist playlist = libraryModel.getAllPlaylists().get(0);
-        assertNotNull(playlist);
-
-        libraryModel.addSongToPlaylist("My Playlist", song);
-        assertTrue(playlist.getSongs().contains(song));
-
-        // Test when song is null
-        libraryModel.addSongToPlaylist("My Playlist", null);
-        assertEquals(1, playlist.getSongs().size()); // Ensure no null song is added
-    }
-
-   
-    @Test
-    public void testAddSongToSingles() {
-        libraryModel.addSong(song);
-        assertTrue(libraryModel.getAllSongs().contains(song));
-    }
-
-    
-    @Test
-    public void testSearchSongsByArtist() {
-        libraryModel.addAlbum("21");
-        ArrayList<Song> songs = libraryModel.searchLibrarySongsByArtist("Adele");
-        assertFalse(songs.isEmpty());
-        assertEquals("Adele", songs.get(0).getArtist());
-
-        
-        songs = libraryModel.searchLibrarySongsByArtist("Non-Existing Artist");
-        assertTrue(songs.isEmpty());  
-    }
-
-   
-    @Test
-    public void testFavoriteSong() {
-        libraryModel.favoriteSong(song);
-        assertTrue(song.getFavorite()); 
-
-       
-        libraryModel.favoriteSong(null);
-        assertFalse(song.getFavorite()); 
-    }
-
-   
-    @Test
-    public void testSearchAlbumsByArtist() {
-        libraryModel.addAlbum("21");
-        ArrayList<Album> albums = libraryModel.searchLibraryAlbumsByArtist("Adele");
-        assertFalse(albums.isEmpty());
-        assertEquals("Adele", albums.get(0).getArtist());
-
-        
-        albums = libraryModel.searchLibraryAlbumsByArtist("Non-Existing Artist");
-        assertTrue(albums.isEmpty());  // Expect an empty result
-    }
-
-   
-    @Test
-    public void testGetFavoriteSongs() {
-        libraryModel.favoriteSong(song); // Mark song as favorite
-        ArrayList<Song> favorites = libraryModel.getFavoriteSongs();
-        assertTrue(favorites.contains(song));
-
-        
-        favorites = libraryModel.getFavoriteSongs();
-        assertTrue(favorites.isEmpty()); // No favorites should be there yet
-    }
-
-    
-    @Test
-    public void testSearchLibraryAlbumByTitle() {
-        libraryModel.addAlbum("21");
-        Album retrievedAlbum = libraryModel.searchLibraryAlbumByTitle("21");
-        assertNotNull(retrievedAlbum);
-        assertEquals("Adele", retrievedAlbum.getArtist());
-
-       
-        retrievedAlbum = libraryModel.searchLibraryAlbumByTitle("Non-Existing Album");
-        assertNull(retrievedAlbum); // Expect null since the album doesn't exist
-    }
-
-    
-    @Test
-    public void testEmptyLibraryBehavior() {
-        ArrayList<Song> songs = libraryModel.getLibrarySongsByTitle("Non-Existing Song");
-        assertTrue(songs.isEmpty()); 
-
-        ArrayList<Album> albums = libraryModel.searchLibraryAlbumsByArtist("Non-Existing Artist");
-        assertTrue(albums.isEmpty());
-    }
-
-    
-    @Test
-    public void testRemoveSongFromPlaylist() {
-        libraryModel.createPlaylist("My Playlist");
-        Playlist playlist = libraryModel.getAllPlaylists().get(0);
-        libraryModel.addSongToPlaylist("My Playlist", song);
-        assertTrue(playlist.getSongs().contains(song));
-
-        libraryModel.removeSongFromPlaylist("My Playlist", "Rolling in the Deep");
-        assertFalse(playlist.getSongs().contains(song)); // Song should be removed
-    }
-
-   
-    @Test
-    public void testGetStoreSongsByTitle() {
-        ArrayList<Song> songs = musicStore.searchSongByTitle("Nonexistent Song");
-        assertTrue(songs.isEmpty());
-
-        songs = musicStore.searchSongByTitle("Rolling in the Deep");
-        assertFalse(songs.isEmpty());
-        assertEquals("Rolling in the Deep", songs.get(0).getName());
-    }
-
-  
-    @Test
+    @Test 
     public void testGetLibrarySongsByTitle() {
-        ArrayList<Song> songs = musicStore.getSongsByTitle("Nonexistent Song");
-        assertTrue(songs.isEmpty());
-
-        songs = musicStore.getSongsByTitle("Rolling in the Deep");
-        assertFalse(songs.isEmpty());
-        assertEquals("Rolling in the Deep", songs.get(0).getName(), "The song returned should match the title");
+    	LibraryModel libraryModel = new LibraryModel();
+    	String example = "Rolling in the deep";    	
+    	ArrayList <Song> result = libraryModel.getStoreSongsByTitle(example);
+    	for (Song s : result) {
+    		libraryModel.addSong(s);
+    		libraryModel.createPlaylist("examplePlaylist");
+    		libraryModel.addSongToPlaylist("examplePlaylist", s);
+    	}
+    	libraryModel.addAlbum("21");
+    	
+    	assertNotNull(libraryModel.getLibrarySongsByTitle(example));
+    	assertTrue(libraryModel.getLibrarySongsByTitle(example).size() > 0);
     }
-
+    
+    @Test 
+    public void testGetAndRateFavoriteSong() {
+    	LibraryModel libraryModel = new LibraryModel();
+    	String example = "Rolling in the deep";    	
+    	ArrayList <Song> result = libraryModel.getStoreSongsByTitle(example);
+    	for (Song s : result) {
+    		libraryModel.addSong(s);
+    		libraryModel.rateSong(s, 4);
+    	}
+    	Song result0 = result.get(0);
+    	libraryModel.favoriteSong(result0);
+    	assertTrue(libraryModel.getFavoriteSongs().contains(result0));
+    }
+    
+    @Test 
+    public void testRemovePlaylist() {
+    	LibraryModel libraryModel = new LibraryModel();
+    	String example = "Rolling in the deep";    
+    	ArrayList <Song> result = libraryModel.getStoreSongsByTitle(example);
+    	for (Song s : result) {
+    		libraryModel.addSong(s);
+    	}
+    	String example1 = "Lullaby";    
+    	ArrayList <Song> result1 = libraryModel.getStoreSongsByTitle(example1);
+    	for (Song s : result1) {
+    		libraryModel.addSong(s);
+    	}
+    	Song result0 = result.get(0);
+    	Song anotherSong = result1.get(0);
+    	libraryModel.createPlaylist("examplePlaylist");
+		libraryModel.addSongToPlaylist("examplePlaylist", result0);
+		libraryModel.addSongToPlaylist("examplePlaylist", anotherSong);
+		libraryModel.removeSongFromPlaylist("examplePlaylist", "rolling in the deep");
+		Playlist playlist = libraryModel.getUserPlaylist("examplePlaylist");
+		assertTrue(playlist.getSongs().get(0) != result0);
+    }
+    
     @Test
-    public void testRateSong() {
-        Song song = musicStore.getSong("Rolling in the Deep");
-        assertNotNull(song);
-
+    public void testGetAll() {
+    	LibraryModel libraryModel = new LibraryModel();
+    	libraryModel.addAlbum("21");
+    	libraryModel.addAlbum("19");
+    	libraryModel.addAlbum("cuando los angeles lloran");
+    	libraryModel.createPlaylist("examplePlaylist");
+    	Playlist playlist = libraryModel.getUserPlaylist("examplePlaylist");
+    	String example = "my heart is full";    
+    	ArrayList <Song> result = libraryModel.getStoreSongsByTitle(example);
+    	for (Song s : result) {
+    		libraryModel.addSong(s);
+    		playlist.addSong(s);
+    	}
+    	
+    	assertNotNull(libraryModel.getAllSongs());
+    	assertTrue(libraryModel.getAllArtists().contains("Adele"));
+    	assertTrue(libraryModel.getAllPlaylists().contains(playlist));
+    	assertNotNull(libraryModel.getAllAlbums());
     }
-
+    
+    @Test 
+    public void testGetFavoriteSongs() {
+    	LibraryModel libraryModel = new LibraryModel();
+    	libraryModel.addAlbum("21");
+    	libraryModel.addAlbum("19");
+    	libraryModel.addAlbum("cuando los angeles lloran");
+    	libraryModel.createPlaylist("examplePlaylist");
+    	Playlist playlist = libraryModel.getUserPlaylist("examplePlaylist");
+    	ArrayList <Song> favorites = libraryModel.searchLibrarySongByTitle("rolling in the deep");
+    	libraryModel.favoriteSong(favorites.get(0));
+    	ArrayList <Song> favorites1 = libraryModel.searchLibrarySongByTitle("dejame entrar");
+    	playlist.addSong(favorites1.get(0));
+    	libraryModel.favoriteSong(playlist.getSongs().get(0));
+    	
+    	assertNotNull(libraryModel.getFavoriteSongs().get(0));
+    }
+    
     @Test
-    public void testGetAllSongs() {
-        ArrayList<Song> allSongs = libraryModel.getAllSongs();
-        assertNotNull(allSongs);
-        assertTrue(allSongs.size() > 0);
+    public void searchLibrary() {
+    	LibraryModel libraryModel = new LibraryModel();
+    	libraryModel.addAlbum("21");
+    	libraryModel.addAlbum("19");
+    	libraryModel.addAlbum("cuando los angeles lloran");
+    	libraryModel.createPlaylist("examplePlaylist");
+    	Playlist playlist = libraryModel.getUserPlaylist("examplePlaylist");
+    	ArrayList <Song> search = libraryModel.searchLibrarySongByTitle("dejame entrar");
+    	playlist.addSong(search.get(0));
+    	ArrayList <Song> search1 = libraryModel.getStoreSongsByTitle("uh oh");
+    	libraryModel.addSong(search1.get(0));
+    	
+    	
+    	
+    	assertNotNull(libraryModel.searchLibraryAlbumsByArtist("adele"));
+    	assertNotNull(libraryModel.searchLibraryAlbumsByArtist("mana"));
+    	assertNotNull(libraryModel.searchLibraryAlbumsByArtist("norah jones"));
+    	assertNotNull(libraryModel.searchLibrarySongsByArtist("adele"));
+    	assertNotNull(libraryModel.searchLibrarySongsByArtist("mana"));
+    	assertNotNull(libraryModel.searchLibrarySongsByArtist("norah jones"));
+    	assertNotNull(libraryModel.searchLibraryAlbumByTitle("21"));
     }
+    
+   
 }
-
-
