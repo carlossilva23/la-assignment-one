@@ -128,11 +128,11 @@ public class LibraryModel {
     }
     
     public ArrayList<Album> getAllAlbums() {
-        return albumLibrary;
+        return new ArrayList<>(albumLibrary);
     }
     
     public ArrayList<Playlist> getAllPlaylists() {
-        return userPlaylists;
+        return new ArrayList<>(userPlaylists);
     }
     
     public ArrayList<Song> getFavoriteSongs() {
