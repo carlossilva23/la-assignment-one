@@ -61,7 +61,7 @@ public class MusicStore {
 	}
 	
 	public ArrayList<Song> getSongsByTitle(String title) {
-        ArrayList<Song> matches = new ArrayList<>();
+        ArrayList<Song> matches = new ArrayList<>(); 
         for (Album album : getLibrary()) {
             for (Song song : album.getSongs()) {
                 if (song.getName().equalsIgnoreCase(title)) {
