@@ -22,14 +22,6 @@ public class Album extends Playlist {
         return artist;
     }
     
-    public void print() {
-        System.out.println(getName() + " by " + artist + " (" + year + ", " + genre + ")");
-        System.out.println("Songs:");
-        for (Song song : super.getSongs()) {
-            System.out.println("  - " + song.getName());
-        }
-    }
-    
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(getName() + " by " + artist + " (" + year + ", " + genre + ")\nSongs:");
