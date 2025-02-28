@@ -284,7 +284,7 @@ public class LibraryView {
                     if (storeAlbumResult == null) {
                         System.out.println("Album not found in MusicStore.");
                     } else {
-                        storeAlbumResult.print();
+                        System.out.println(storeAlbumResult);
                     }
                     break;
                 case 21:
@@ -295,7 +295,7 @@ public class LibraryView {
                         System.out.println("No albums by " + storeAlbumArtist + " found in MusicStore.");
                     } else {
                         for (Album a : storeAlbumsByArtist) {
-                            a.print();
+                            System.out.println(a);
                         }
                     }
                     break;
