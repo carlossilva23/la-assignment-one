@@ -16,14 +16,14 @@ public class MusicStore {
 		try (BufferedReader reader = new BufferedReader(new FileReader(albumsFile))) {
 	        while ((line = reader.readLine()) != null) {
 	            data = line.split(",");
-	            getLibrary().add(new Album(data[0], data[1]));
+	            library.add(new Album(data[0], data[1]));
 	        }
 	    } catch (Exception e) {
 	        System.out.println("Library file scan failed."); 
 	    }
 		
 		boolean firstLine;
-		for (Album album : getLibrary()) {
+		for (Album album : library) {
 			firstLine = true;
 			albumsFile = new File(albums, album.getName()+"_"+album.getArtist()+".txt");
 			try (BufferedReader reader = new BufferedReader(new FileReader(albumsFile))) {
@@ -45,14 +45,14 @@ public class MusicStore {
 	}
 
 	public Album getAlbum(String name) {
-		for (Album album : getLibrary()) {
+		for (Album album : library) {
 			if (album.getName().equalsIgnoreCase(name)) return album;
 		}
 		return null;
 	}
 	
 	public Song getSong(String name) {
-		for (Album album : getLibrary()) {
+		for (Album album : library) {
 			for (Song song : album.getSongs()) {
 				if (song.getName().equalsIgnoreCase(name)) return song;
 			}
@@ -62,7 +62,7 @@ public class MusicStore {
 	
 	public ArrayList<Song> getSongsByTitle(String title) {
         ArrayList<Song> matches = new ArrayList<>(); 
-        for (Album album : getLibrary()) {
+        for (Album album : library) {
             for (Song song : album.getSongs()) {
                 if (song.getName().equalsIgnoreCase(title)) {
                     matches.add(song);
@@ -78,7 +78,7 @@ public class MusicStore {
     
     public ArrayList<Song> searchSongsByArtist(String artist) {
         ArrayList<Song> matches = new ArrayList<>();
-        for (Album album : getLibrary()) {
+        for (Album album : library) {
             for (Song song : album.getSongs()) {
                 if (song.getArtist().equalsIgnoreCase(artist)) {
                     matches.add(song);
@@ -94,19 +94,11 @@ public class MusicStore {
     
     public ArrayList<Album> searchAlbumsByArtist(String artist) {
         ArrayList<Album> matches = new ArrayList<>();
-        for (Album album : getLibrary()) {
+        for (Album album : library) {
             if (album.getArtist().equalsIgnoreCase(artist)) {
                 matches.add(album);
             }
         }
         return matches;
     }
-
-	public ArrayList<Album> getLibrary() {
-		return library;
-	}
-
-	public void setLibrary(ArrayList<Album> library) {
-		this.library = library;
-	}
 }
