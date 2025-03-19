@@ -1,13 +1,28 @@
 package model;
 
-public class Album extends Playlist {
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+public class Album {
+	private String name;
     private String artist;
-    private String genre;
-    private int year;
+    protected String genre;
+    protected int year;
+    protected final Map<String, Song> songs;
     
     public Album(String name, String artist) {
-        super(name);
+        this.name = name;
         this.artist = artist;
+        this.songs = new LinkedHashMap<>();
+    }
+    
+    public String getName() {
+    	return name;
+    }
+    
+    public String getArtist() {
+    	return artist;
     }
     
     public void setGenre(String genre) {
@@ -18,14 +33,23 @@ public class Album extends Playlist {
         this.year = year;
     }
     
-    public String getArtist() {
-        return artist;
+    public String getGenre() {
+    	return genre;
+    }
+  
+    public void addSong(Song song) {
+    	songs.put(song.getName(), song);
+    }
+    
+    public Collection<Song> getSongs() {
+    	return songs.values();
     }
     
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(getName() + " by " + artist + " (" + year + ", " + genre + ")\nSongs:");
-        for (Song song : super.getSongs()) {
+        sb.append(name).append(" by ").append(artist).append(" (").append(year).append(", ").append(genre).append(")");
+        sb.append("\nSongs:");
+        for (Song song : songs.values()) {
             sb.append("\n  - ").append(song.getName());
         }
         return sb.toString();
