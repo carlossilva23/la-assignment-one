@@ -12,7 +12,7 @@ public class LibraryModel {
         singles = new Playlist("Singles");
         userPlaylists = new ArrayList<>();
         albumLibrary = new ArrayList<>();
-        store = new MusicStore();  
+        store = MusicStore.getInstance();  
     }
     
     public ArrayList<Song> getStoreSongsByTitle(String title) {

@@ -6,13 +6,25 @@ import java.io.FileReader;
 import java.util.ArrayList;
 
 public class MusicStore {
+	private static MusicStore instance;
 	private ArrayList<Album> library = new ArrayList<>();
 	
-	public MusicStore() {
+	private MusicStore() {
+		loadMusicData();
+	}
+	
+	public static MusicStore getInstance() {
+		if (instance == null) {
+			instance = new MusicStore();
+		}
+		return instance;
+	}
+	private void loadMusicData() {
 		File albums = new File("src/albums");
 		File albumsFile = new File(albums, "albums.txt"); 
 		String line;
         String[] data = {};
+        
 		try (BufferedReader reader = new BufferedReader(new FileReader(albumsFile))) {
 	        while ((line = reader.readLine()) != null) {
 	            data = line.split(",");
@@ -22,9 +34,8 @@ public class MusicStore {
 	        System.out.println("Library file scan failed."); 
 	    }
 		
-		boolean firstLine;
 		for (Album album : library) {
-			firstLine = true;
+			boolean firstLine = true;
 			albumsFile = new File(albums, album.getName()+"_"+album.getArtist()+".txt");
 			try (BufferedReader reader = new BufferedReader(new FileReader(albumsFile))) {
 		        while ((line = reader.readLine()) != null) {
