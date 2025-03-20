@@ -41,10 +41,6 @@ public class LibraryModel {
         }
         return matches;
     }
-    
-    public Map<String, Song> getLibrarySongsByTitle(String title) {
-    	
-    }
         
     // Change to Add UserAlbum with Song Added 
     public void addSong(Song song) {

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import model.LibraryModel;
 import model.Playlist;
+import model.Rating;
 import model.Song;
 import model.Album;
 
@@ -309,4 +310,14 @@ public class LibraryView {
         }
         scanner.close();
     }
+    /*
+     * public static Rating checkValue(int value) {
+		for (Rating r : Rating.values()) {
+			if (r.value == value) {
+				return r;
+			}
+		}
+		throw new IllegalArgumentException("Invalid Rating: " + value);
+	}
+     */
 }
