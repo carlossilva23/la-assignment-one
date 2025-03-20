@@ -6,6 +6,7 @@ public class Song {
 	private String album;
 	private int rating;
 	private boolean favorite;
+	// Plays Variable (Stores # of Times Played) 
 	
 	public Song(String name, String artist, String album) {
 		this.name = name;

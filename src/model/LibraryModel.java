@@ -1,17 +1,19 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LibraryModel {
     private Playlist singles;
-    private ArrayList<Playlist> userPlaylists;
-    private ArrayList<Album> albumLibrary;
+    private Map<String, Song> userPlaylists;
+    private Map<String, Album> albumLibrary;
     private MusicStore store;
     
     public LibraryModel() {
         singles = new Playlist("Singles");
-        userPlaylists = new ArrayList<>();
-        albumLibrary = new ArrayList<>();
+        userPlaylists = new HashMap<>();
+        albumLibrary = new HashMap<>();
         store = MusicStore.getInstance();  
     }
     
@@ -39,7 +41,12 @@ public class LibraryModel {
         }
         return matches;
     }
+    
+    public Map<String, Song> getLibrarySongsByTitle(String title) {
+    	
+    }
         
+    // Change to Add UserAlbum with Song Added 
     public void addSong(Song song) {
         if (song != null) {
             singles.addSong(song);
@@ -58,6 +65,7 @@ public class LibraryModel {
         }
     }
     
+    // Change to Add UserAlbum 
     public void addAlbum(String albumTitle) {
         Album album = store.getAlbum(albumTitle);
         if (album != null) {
@@ -65,9 +73,11 @@ public class LibraryModel {
         }
     }
     
+    // Change to Initialize to Map 
     public void createPlaylist(String playlistName) {
         userPlaylists.add(new Playlist(playlistName));
     }
+    
     
     public void addSongToPlaylist(String playlistName, Song song) {
         Playlist playlist = getUserPlaylist(playlistName);
@@ -76,6 +86,7 @@ public class LibraryModel {
         }
     }
     
+    // Change to Map Remove 
     public void removeSongFromPlaylist(String playlistName, String songTitle) {
         Playlist playlist = getUserPlaylist(playlistName);
         if (playlist != null) {
@@ -83,6 +94,7 @@ public class LibraryModel {
         }
     }
     
+    // Change to Map Search 
     public Playlist getUserPlaylist(String playlistName) {
         for (Playlist p : userPlaylists) {
             if (p.getName().equalsIgnoreCase(playlistName)) {
@@ -92,6 +104,7 @@ public class LibraryModel {
         return null;
     }
         
+    // Change to Map Search 
     public ArrayList<Song> getAllSongs() {
         ArrayList<Song> all = new ArrayList<>();
         all.addAll(singles.getSongs());
@@ -104,6 +117,7 @@ public class LibraryModel {
         return all;
     }
     
+    // Change to Map Search 
     public ArrayList<String> getAllArtists() {
         ArrayList<String> artists = new ArrayList<>();
         for (Song s : singles.getSongs()) {
@@ -127,14 +141,17 @@ public class LibraryModel {
         return artists;
     }
     
+    // Change to Map 
     public ArrayList<Album> getAllAlbums() {
         return new ArrayList<>(albumLibrary);
     }
     
+    // Change to Map 
     public ArrayList<Playlist> getAllPlaylists() {
         return new ArrayList<>(userPlaylists);
     }
     
+    // Change to Search in Map 
     public ArrayList<Song> getFavoriteSongs() {
         ArrayList<Song> fav = new ArrayList<>();
         for (Song s : singles.getSongs()) {
@@ -156,10 +173,12 @@ public class LibraryModel {
         return fav;
     }
         
+    
     public ArrayList<Song> searchLibrarySongByTitle(String title) {
         return getLibrarySongsByTitle(title);
     }
     
+    // Change to Search with Map 
     public ArrayList<Song> searchLibrarySongsByArtist(String artist) {
         ArrayList<Song> matches = new ArrayList<>();
         for (Song s : singles.getSongs()) {
@@ -181,6 +200,7 @@ public class LibraryModel {
         return matches;
     }
     
+    // Change to Search in Map 
     public Album searchLibraryAlbumByTitle(String albumTitle) {
         for (Album album : albumLibrary) {
             if (album.getName().equalsIgnoreCase(albumTitle))
@@ -189,6 +209,7 @@ public class LibraryModel {
         return null;
     }
     
+    // Change to Search in Map 
     public ArrayList<Album> searchLibraryAlbumsByArtist(String artist) {
         ArrayList<Album> matches = new ArrayList<>();
         for (Album album : albumLibrary) {
@@ -213,4 +234,23 @@ public class LibraryModel {
     public ArrayList<Album> searchStoreAlbumsByArtist(String artist) {
         return store.searchAlbumsByArtist(artist);
     }
+    
+    /* 
+     * TO DO: 
+     * 
+     * - Create User Check and Password Check 
+     * - Create Save and Load Data Functions 
+     * - "Plays" Functionality 
+     * 		- 10 Most Recent Plays 
+     * 		- 10 Most Frequently Played 
+     * 	- Sorting By Title, Artist, Rating Functions
+     * - Remove Songs/Albums from Library 
+     * - Shuffle Functionality (All Songs and Playlist) 
+     * - Change getSongs to add Album Info 
+     * - Search by Genre Function 
+     * - Automatic Playlists 
+     * 		- Favorite Songs 
+     * 		- Genre(s) w 10+ Songs 
+     * 		- Top Rated Songs (4 or 5) 
+     */
 }

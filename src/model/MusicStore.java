@@ -4,10 +4,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MusicStore {
 	private static MusicStore instance;
-	private ArrayList<Album> library = new ArrayList<>();
+	private ArrayList<Album> store = new ArrayList<>();
 	
 	private MusicStore() {
 		loadMusicData();
@@ -28,13 +30,13 @@ public class MusicStore {
 		try (BufferedReader reader = new BufferedReader(new FileReader(albumsFile))) {
 	        while ((line = reader.readLine()) != null) {
 	            data = line.split(",");
-	            library.add(new Album(data[0], data[1]));
+	            store.add(new Album(data[0], data[1]));
 	        }
 	    } catch (Exception e) {
 	        System.out.println("Library file scan failed."); 
 	    }
 		
-		for (Album album : library) {
+		for (Album album : store) {
 			boolean firstLine = true;
 			albumsFile = new File(albums, album.getName()+"_"+album.getArtist()+".txt");
 			try (BufferedReader reader = new BufferedReader(new FileReader(albumsFile))) {
@@ -55,15 +57,17 @@ public class MusicStore {
 		}
 	}
 
+	// Change to Map 
 	public Album getAlbum(String name) {
-		for (Album album : library) {
+		for (Album album : store) {
 			if (album.getName().equalsIgnoreCase(name)) return album;
 		}
 		return null;
 	}
 	
+	// Change to Map 
 	public Song getSong(String name) {
-		for (Album album : library) {
+		for (Album album : store) {
 			for (Song song : album.getSongs()) {
 				if (song.getName().equalsIgnoreCase(name)) return song;
 			}
@@ -71,9 +75,10 @@ public class MusicStore {
 		return null;
 	}
 	
+	// Change to Map 
 	public ArrayList<Song> getSongsByTitle(String title) {
         ArrayList<Song> matches = new ArrayList<>(); 
-        for (Album album : library) {
+        for (Album album : store) {
             for (Song song : album.getSongs()) {
                 if (song.getName().equalsIgnoreCase(title)) {
                     matches.add(song);
@@ -83,13 +88,15 @@ public class MusicStore {
         return matches;
     }
     
+	// Change to Map 
     public ArrayList<Song> searchSongByTitle(String title) {
         return getSongsByTitle(title);
     }
     
+    // Change to Map 
     public ArrayList<Song> searchSongsByArtist(String artist) {
         ArrayList<Song> matches = new ArrayList<>();
-        for (Album album : library) {
+        for (Album album : store) {
             for (Song song : album.getSongs()) {
                 if (song.getArtist().equalsIgnoreCase(artist)) {
                     matches.add(song);
@@ -99,13 +106,15 @@ public class MusicStore {
         return matches;
     }
     
+    // Change to Map 
     public Album searchAlbumByTitle(String albumTitle) {
         return getAlbum(albumTitle);
     }
     
+    // Change to Map 
     public ArrayList<Album> searchAlbumsByArtist(String artist) {
         ArrayList<Album> matches = new ArrayList<>();
-        for (Album album : library) {
+        for (Album album : store) {
             if (album.getArtist().equalsIgnoreCase(artist)) {
                 matches.add(album);
             }
