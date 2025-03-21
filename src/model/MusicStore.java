@@ -50,7 +50,7 @@ public class MusicStore {
 		            	album.setYear(Integer.parseInt(data[3]));
 		            	firstLine = false;
 		            } else {
-		            	songs.add(new Song(line, data[1], data[0]));
+		            	songs.add(new Song(line, data[1]));
 		            	index++;
 		            }
 		        }
