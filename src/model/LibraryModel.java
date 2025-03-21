@@ -6,8 +6,8 @@ import java.util.Map;
 
 public class LibraryModel {
     private Playlist singles;
-    private Map<String, Song> userPlaylists;
-    private Map<String, Album> albumLibrary;
+    private ArrayList<Playlist> userPlaylists;
+    private Map<String,UserAlbum> albumLibrary;
     private MusicStore store;
     
     public LibraryModel() {

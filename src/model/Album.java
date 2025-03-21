@@ -1,20 +1,20 @@
 package model;
 
 import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class Album {
 	private String name;
     private String artist;
     protected String genre;
     protected int year;
-    protected final Map<String, Song> songs;
+    protected final Map<Integer, Song> songs;
     
     public Album(String name, String artist) {
         this.name = name;
         this.artist = artist;
-        this.songs = new LinkedHashMap<>();
+        this.songs = new TreeMap<>();
     }
     
     public String getName() {
@@ -37,8 +37,8 @@ public class Album {
     	return genre;
     }
   
-    public void addSong(Song song) {
-    	songs.put(song.getName(), song);
+    public void addSong(int index, Song song) {
+    	songs.put(index, song);
     }
     
     public Collection<Song> getSongs() {
