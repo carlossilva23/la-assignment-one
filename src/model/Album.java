@@ -1,20 +1,31 @@
 package model;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.Collections;
+import java.util.List;
 
 public class Album {
-	private String name;
-    private String artist;
-    protected String genre;
-    protected int year;
-    protected final Map<Integer, Song> songs;
+	private final String name;
+    private final String artist;
+    private String genre;
+    private int year;
+    private List<Song> songs;
     
     public Album(String name, String artist) {
         this.name = name;
         this.artist = artist;
-        this.songs = new TreeMap<>();
+        this.songs = Collections.emptyList();
+    }
+    
+    public void setGenre(String genre) {
+    	this.genre = genre;
+    }
+    
+    public void setYear(int year) {
+    	this.year = year;
+    }
+    
+    public void setSongs(List<Song> songs) {
+    	this.songs = Collections.unmodifiableList(songs);
     }
     
     public String getName() {
@@ -25,33 +36,31 @@ public class Album {
     	return artist;
     }
     
-    public void setGenre(String genre) {
-        this.genre = genre;
-    }
-    
-    public void setYear(int year) {
-        this.year = year;
-    }
-    
     public String getGenre() {
     	return genre;
     }
-  
-    public void addSong(int index, Song song) {
-    	songs.put(index, song);
+    
+    public int getYear() {
+    	return year;
     }
     
-    public Collection<Song> getSongs() {
-    	return songs.values();
+    public List<Song> getSongs() {
+    	return songs;
     }
     
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(name).append(" by ").append(artist).append(" (").append(year).append(", ").append(genre).append(")");
-        sb.append("\nSongs:");
-        for (Song song : songs.values()) {
-            sb.append("\n  - ").append(song.getName());
-        }
-        return sb.toString();
-    }
+    @Override
+	public String toString() {
+	    StringBuilder sb = new StringBuilder();
+	    
+	    sb.append(name).append(" by ");
+	    sb.append(artist).append(" (");
+	    sb.append(year).append(", ");
+	    sb.append(genre).append(")\nSongs:");
+
+	    for (Song song : songs) {
+	        sb.append("\n - ").append(song.getName());
+	    }
+
+	    return sb.toString();
+	}
 }

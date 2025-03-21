@@ -1,30 +1,42 @@
 package model;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 
-public class UserAlbum extends Album {
-	public UserAlbum(String name, String artist) {
-		super(name, artist);
+public class UserAlbum {
+	private final Album album;
+	private final List<Song> userSongs;
+	
+	public UserAlbum(Album album) {
+		this.album = album;
+		this.userSongs = new ArrayList<>();
 	}
 	
-	@Override
-	public Collection<Song> getSongs() {
-		return songs.values();
+	public void addSong(Song song) {
+		int index = album.getSongs().indexOf(song);
+		if (index != -1 && !userSongs.contains(song)) { 
+			userSongs.add(index, song);
+		}
 	}
 	
+	public List<Song> getSongs() {
+		return List.copyOf(userSongs);
+	}
+	  
 	@Override
 	public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getName()).append(" by ").append(getArtist()).append(" (").append(year).append(", ").append(genre).append(")");
-        sb.append("\nSongs:");
-        
-        if (songs.isEmpty()) {
-            sb.append("\n  (No songs added yet)");
-        } else {
-            for (Song song : songs.values()) {
-                sb.append("\n  - ").append(song.getName());
-            }
-        }
-        return sb.toString();
-    }
+	    StringBuilder sb = new StringBuilder();
+	    
+	    sb.append(album.getName()).append(" by ");
+	    sb.append(album.getArtist()).append(" (");
+	    sb.append(album.getYear()).append(", ");
+	    sb.append(album.getGenre()).append(")\nSongs:");
+
+	    for (Song song : userSongs) {
+	        sb.append("\n - ").append(song.getName());
+	    }
+
+	    return sb.toString();
+	}
+
 }

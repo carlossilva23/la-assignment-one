@@ -4,25 +4,21 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MusicStore {
-	private static MusicStore instance;
 	private Map<String, Album> store;
 	
+	// Every time a MusicStore class is initialized it is loaded up with 
+	// the information needed from the text file(s).
 	private MusicStore() {
 		store = new HashMap<>();
 		loadMusicData();
 	}
-	
-	public static MusicStore getInstance() {
-		if (instance == null) {
-			instance = new MusicStore();
-		}
-		return instance;
-	}
-	
+
 	private void loadMusicData() {
 		File albums = new File("src/albums");
 		File albumsFile = new File(albums, "albums.txt"); 
@@ -37,12 +33,15 @@ public class MusicStore {
 	        }
 	    } catch (Exception e) {
 	        System.out.println("Library file scan failed."); 
+	        e.printStackTrace();
 	    }
 		
 		for (Album album : store.values()) {
 			boolean firstLine = true;
 			int index = 1;
+			List<Song> songs = new ArrayList<>();
 			albumsFile = new File(albums, album.getName()+"_"+album.getArtist()+".txt");
+			
 			try (BufferedReader reader = new BufferedReader(new FileReader(albumsFile))) {
 		        while ((line = reader.readLine()) != null) {
 		            if (firstLine) {
@@ -51,10 +50,11 @@ public class MusicStore {
 		            	album.setYear(Integer.parseInt(data[3]));
 		            	firstLine = false;
 		            } else {
-		            	album.addSong(index, new Song(line, data[1], data[0]));
+		            	songs.add(new Song(line, data[1], data[0]));
 		            	index++;
 		            }
 		        }
+		        album.setSongs(Collections.unmodifiableList(songs));
 		    } catch (Exception e) {
 		        System.out.println("Album scan failed.");
 		        e.printStackTrace();
