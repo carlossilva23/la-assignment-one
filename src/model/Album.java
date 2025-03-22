@@ -2,6 +2,7 @@ package model;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class Album {
 	private final String name;
@@ -46,6 +47,23 @@ public class Album {
 
 	public List<Song> getSongs() {
 		return songs;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		Album album = (Album) obj;
+		return name.equals(album.name) && artist.equals(album.artist);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(name, artist);
 	}
 
 	@Override
