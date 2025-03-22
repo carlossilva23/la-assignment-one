@@ -1,15 +1,16 @@
 package model;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class Playlist {
     private String name;
-    private Map<String, Song> songs;
+    private List<Song> songs;
     
     public Playlist(String name) {
         this.name = name;
-        this.songs = new HashMap<>();
+        this.songs = new ArrayList<>();
     }
     
     public String getName() {
@@ -17,25 +18,25 @@ public class Playlist {
     }
     
     public void addSong(Song song) {
-        if (song != null) {
-            songs.put(song.getName(), song);
+        if (songs.contains(song)) {
+            songs.add(song);
         }
     }
     
-    public void removeSong(String songName) {
-        songs.remove(songName);
+    public void removeSong(Song song) {
+        songs.remove(song);
     }
     
-    public Map<String, Song> getSongs() {
-        return songs;
+    public List<Song> getSongs() {
+        return new ArrayList<>(songs);
     }
     
     @Override 
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(name).append(":");
-        for (Song song : songs.values()) {
-            sb.append("\n  ").append(song.toString());
+        sb.append(name).append(":\n");
+        for (Song song : songs) {
+            sb.append(" - ").append(song.toString());
         }
         return sb.toString();
     }
