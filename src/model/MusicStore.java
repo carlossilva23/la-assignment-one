@@ -133,7 +133,7 @@ public class MusicStore {
 	public void passAlbumToLibrary(Album album, LibraryModel userLibrary) {
 		for (Album albumList : store.values()) {
 			if (album.equals(albumList)) {
-				userLibrary.addAlbum(album));
+				userLibrary.addAlbum(album);
 			}
 		}
 	}

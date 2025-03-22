@@ -1,5 +1,6 @@
 package model;
 
+import java.util.Comparator;
 import java.util.Objects;
 
 public class Song {
@@ -27,8 +28,16 @@ public class Song {
 		return this.artist;
 	}
 
+	public Album getAlbum() {
+		return album;
+	}
+
 	public Rating getRating() {
 		return rating;
+	}
+
+	public String getGenre() {
+		return album.getGenre();
 	}
 
 	public void setRating(Rating rating) {
@@ -42,6 +51,27 @@ public class Song {
 	public void incrementPlayCount() {
 		this.playCount++;
 	}
+
+	public static final Comparator<Song> sortByTitle = new Comparator<Song>() {
+		@Override
+		public int compare(Song song1, Song song2) {
+			return song1.getName().compareTo(song2.getName());
+		}
+	};
+
+	public static final Comparator<Song> sortByArtist = new Comparator<Song>() {
+		@Override
+		public int compare(Song song1, Song song2) {
+			return song1.getArtist().compareTo(song2.getArtist());
+		}
+	};
+
+	public static final Comparator<Song> sortByRating = new Comparator<Song>() {
+		@Override
+		public int compare(Song song1, Song song2) {
+			return song1.getRating().compareTo(song2.getRating());
+		}
+	};
 
 	@Override
 	public boolean equals(Object obj) {
