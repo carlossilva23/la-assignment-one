@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -10,7 +11,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class LibraryModel {
+public class LibraryModel implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private Set<Song> userSongs;
 	private Map<Album, UserAlbum> userAlbums;
 	private Map<String, Playlist> userPlaylists;
