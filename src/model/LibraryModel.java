@@ -8,13 +8,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class LibraryModel {
 	private Set<Song> userSongs;
 	private Map<Album, UserAlbum> userAlbums;
 	private Map<String, Playlist> userPlaylists;
+	private Map<String, Playlist> onlyGenrePlaylists;
 	private Set<Song> favoriteSongs;
-	private List<Song> recentlyPlayed;
+	private LinkedList<Song> recentlyPlayed;
 	private Map<Song, Integer> frequentPlayedSongs;
 	private List<Song> topRated;
 
@@ -22,6 +24,7 @@ public class LibraryModel {
 		this.userSongs = new HashSet<>();
 		this.userAlbums = new HashMap<>();
 		this.userPlaylists = new HashMap<>();
+		this.onlyGenrePlaylists = new HashMap<>();
 		this.favoriteSongs = new HashSet<>();
 		this.recentlyPlayed = new LinkedList<>();
 		this.frequentPlayedSongs = new HashMap<>();
@@ -110,6 +113,7 @@ public class LibraryModel {
 		newUserAlbum.addSong(song);
 
 		userAlbums.put(songAlbum, newUserAlbum);
+		checkAndCreateGenrePlaylist();
 	}
 
 	// Add Album to Library
@@ -126,6 +130,48 @@ public class LibraryModel {
 				}
 			}
 		}
+		checkAndCreateGenrePlaylist();
+	}
+
+	// Remove Song from Library
+	public void removeSong(Song song) {
+		for (UserAlbum userAlbum : userAlbums.values()) {
+			if (userAlbum.getSongs().contains(song)) {
+				userAlbum.getSongs().remove(song);
+			}
+		}
+		for (Playlist playlist : userPlaylists.values()) {
+			if (playlist.getSongs().contains(song)) {
+				playlist.getSongs().remove(song);
+			}
+		}
+
+		if (favoriteSongs.contains(song)) {
+			favoriteSongs.remove(song);
+		}
+		if (topRated.contains(song)) {
+			topRated.remove(song);
+		}
+		frequentPlayedSongs.remove(song);
+		checkAndCreateGenrePlaylist();
+	}
+
+	// Remove Album from Library
+	public void removeAlbum(Album album) {
+		if (userAlbums.containsKey(album)) {
+			UserAlbum userAlbum = userAlbums.get(album);
+
+			for (Playlist playlist : userPlaylists.values()) {
+				playlist.getSongs().removeAll(userAlbum.getSongs());
+			}
+			for (Song song : userAlbum.getSongs()) {
+				frequentPlayedSongs.remove(song);
+				favoriteSongs.remove(song);
+				topRated.remove(song);
+			}
+			userAlbums.remove(album);
+		}
+		checkAndCreateGenrePlaylist();
 	}
 
 	// List All Content (Songs/Albums) in Library
@@ -244,40 +290,57 @@ public class LibraryModel {
 	public void playSong(Song song) {
 		for (Song songs : userSongs) {
 			if (songs.equals(song)) {
-				songs.incrementPlayCount();
-				updateMostRecentlyPlayed();
-				updateMostFrequentlyPlayed();
+				song.incrementPlayCount();
+				recentlyPlayed.addFirst(song);
+				if (recentlyPlayed.size() > 10) {
+					recentlyPlayed.removeLast();
+				}
+				// getOrDefault is a method in Map's Java interface that if the songs exists in
+				// the mostFrequent Map it returns the Song object, else it returns 0 by default
+				frequentPlayedSongs.put(song, frequentPlayedSongs.getOrDefault(song, 0) + 1);
 			}
 		}
 	}
 
-	// Update 10 Most Played Songs
-	public void updateMostRecentlyPlayed() {
-
-	}
-
 	// Retrieve Most Recent Songs
 	public List<Song> getRecentlyPlayed() {
-		return recentlyPlayed;
-	}
-
-	// Update Top 10 Played
-	public void updateMostFrequentlyPlayed() {
-
+		return List.copyOf(recentlyPlayed);
 	}
 
 	// Retrieve Most Frequent Songs
 	public List<Song> getFrequentPlayed() {
-		return frequentPlayedSongs;
+		return frequentPlayedSongs.keySet()
+				// have to stream data in order to sort it
+				.stream()
+				// reversed to get highest first
+				.sorted(Song.sortByPlayCount.reversed())
+				// only want the top 10 songs
+				.limit(10)
+				// group them into a list
+				.collect(Collectors.toList());
 	}
 
 	// Shuffles Songs in Library
-	public ArrayList<Song> shuffleLibrary() {
+	public List<Song> shuffleLibrary() {
+		List<Song> allSongs = new ArrayList<>();
+		for (UserAlbum userAlbum : userAlbums.values()) {
+			allSongs.addAll(userAlbum.getSongs());
+		}
 
+		List<Song> shuffledSongs = new ArrayList<>();
+		Collections.shuffle(shuffledSongs);
+		return shuffledSongs;
 	}
 
 	// Shuffle Songs in Playlist
-	public ArrayList<Song> shufflePlaylist() {
+	public List<Song> shufflePlaylist(Playlist playlist) {
+		List<Song> shuffledSongs = new ArrayList<>();
+		userPlaylists.get(playlist.getName());
+		for (Song songs : playlist.getSongs()) {
+			shuffledSongs.add(songs);
+		}
+		Collections.shuffle(shuffledSongs);
+		return shuffledSongs;
 
 	}
 
@@ -286,14 +349,40 @@ public class LibraryModel {
 		return favoriteSongs;
 	}
 
-	// Get Genre Playlists
-	public ArrayList<Song> getGenrePlaylist(String genre) {
+	// Create All Genre Playlists and Update Lists
+	public void checkAndCreateGenrePlaylist() {
+		Map<String, List<Song>> genreToSongs = new HashMap<>();
+		for (UserAlbum userAlbum : userAlbums.values()) {
+			for (Song song : userAlbum.getSongs()) {
+				String genre = song.getGenre();
+				genreToSongs.putIfAbsent(genre, new ArrayList<>());
+				genreToSongs.get(genre).add(song);
+			}
+		}
 
+		for (Map.Entry<String, List<Song>> entry : genreToSongs.entrySet()) {
+			String genre = entry.getKey();
+			List<Song> songsOfGenre = entry.getValue();
+			if (songsOfGenre.size() >= 10) {
+				Playlist genrePlaylist = onlyGenrePlaylists.get(genre + "Playlist");
+				if (genrePlaylist == null) {
+					genrePlaylist = new Playlist(genre + "Playlist:");
+					onlyGenrePlaylists.put(genre + "Playlist", genrePlaylist);
+				}
+				genrePlaylist.getSongs().addAll(songsOfGenre);
+			}
+		}
 	}
 
 	// Create Top Rated Song List
 	public void createTopRated() {
-
+		for (UserAlbum userAlbum : userAlbums.values()) {
+			for (Song song : userAlbum.getSongs()) {
+				if (song.getRating() == Rating.four || song.getRating() == Rating.five) {
+					topRated.add(song);
+				}
+			}
+		}
 	}
 
 	// Get Top Rated Songs

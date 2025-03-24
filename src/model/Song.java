@@ -40,6 +40,10 @@ public class Song {
 		return album.getGenre();
 	}
 
+	public int getPlayCount() {
+		return playCount;
+	}
+
 	public void setRating(Rating rating) {
 		this.rating = rating;
 	}
@@ -70,6 +74,13 @@ public class Song {
 		@Override
 		public int compare(Song song1, Song song2) {
 			return song1.getRating().compareTo(song2.getRating());
+		}
+	};
+
+	public static final Comparator<Song> sortByPlayCount = new Comparator<Song>() {
+		@Override
+		public int compare(Song song1, Song song2) {
+			return Integer.compare(song1.getPlayCount(), song2.getPlayCount());
 		}
 	};
 
