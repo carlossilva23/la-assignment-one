@@ -11,7 +11,7 @@ public class Song {
 	private boolean favorite;
 	private int playCount;
 
-	public Song(String name, String artist) {
+	public Song(String name, String artist, Album album) {
 		this.name = name;
 		this.artist = artist;
 		this.album = album;

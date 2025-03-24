@@ -14,7 +14,7 @@ public class MusicStore {
 
 	// Every time a MusicStore class is initialized it is loaded up with
 	// the information needed from the text file(s).
-	private MusicStore() {
+	public MusicStore() {
 		store = new HashMap<>();
 		loadMusicData();
 	}
@@ -50,7 +50,7 @@ public class MusicStore {
 						album.setYear(Integer.parseInt(data[3]));
 						firstLine = false;
 					} else {
-						songs.add(new Song(line, data[1]));
+						songs.add(new Song(line, data[1], album));
 					}
 				}
 				album.setSongs(Collections.unmodifiableList(songs));

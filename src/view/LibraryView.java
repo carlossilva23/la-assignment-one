@@ -9,6 +9,7 @@ import model.Album;
 import model.LibraryModel;
 import model.MusicStore;
 import model.Playlist;
+import model.Rating;
 import model.Song;
 import model.User;
 import model.UserAlbum;
@@ -16,7 +17,7 @@ import model.UserManager;
 
 public class LibraryView {
 
-	private static MusicStore store;
+	private static MusicStore store =  new MusicStore();
 	private static UserManager userManager = new UserManager();
 	private static Scanner scanner = new Scanner(System.in);
 
@@ -35,7 +36,7 @@ public class LibraryView {
 			User newUser =  new User(username, password);
 			try {
 				if (UserManager.users)
-			}
+			} catch (Exception e){
 			User newUser = userManager.createUser(username, password);
 			System.out.println("New User Created.");
 			}
@@ -78,7 +79,7 @@ public class LibraryView {
 			System.out.println("30. List Genre Playlists (If Any)");
 			System.out.println("31. Remove Song from Library");
 			System.out.println("32. Remove Album from Library");
-			System.out.println("33. Exit Program (Save Data)");
+			System.out.println("33. Log Out");
 			System.out.print("Enter your choice: ");
 
 			LibraryModel userLib = newUser.getLibrary();
@@ -354,39 +355,111 @@ public class LibraryView {
 				}
 				System.out.println("Song added to playlist.");
 				break;
-				// Fix Below Until Case 28
 			case 24:
 				// Remove Song from Playlist
 				System.out.print("Enter playlist name: ");
 				String playlistToRemoveSong = scanner.nextLine();
-				System.out.print("Enter song title to remove: ");
-				String songToRemoveFromPlaylist = scanner.nextLine();
-				model.removeSongFromPlaylist(playlistToRemoveSong, songToRemoveFromPlaylist);
+				Playlist foundPlaylist = userLib.searchPlaylistsByName(playlistToRemoveSong);
+				if (foundPlaylist != null) {
+					System.out.print("Enter song title to remove: ");
+					String songToRemoveFromPlaylist = scanner.nextLine();
+					ArrayList<Song> songsFound = userLib.searchSongsByTitle(songToRemoveFromPlaylist);
+					if (songsFound.size() == 1) {
+						userLib.removeSongFromPlaylist(playlistFound, songsFound.get(0));
+					} else {
+						System.out.println("Multiple songs found in library, Please choose one:");
+						for (int i = 0; i < songsFound.size(); i++) {
+							System.out.println(i + ": " + songsFound.get(i));
+						}
+						int index = Integer.parseInt(scanner.nextLine());
+						if (index >= 0 && index < songsFound.size()) {
+							userLib.removeSongFromPlaylist(playlistFound, songsFound.get(index));
+						} else {
+							System.out.println("Invalid Selection.");
+						}
+					}
+					System.out.println("Playlist not found.");
+				}
 				System.out.println("Song removed from playlist.");
-				break;
+					break;
 			case 25:
 				// Favorite a Song
 				System.out.print("Enter song title: ");
 				String songToFavorite = scanner.nextLine();
 				ArrayList<Song> favedSong = userLib.searchSongsByTitle(songToFavorite);
-				
-				userLib.favor(songToFavorite);
+				if (favedSong != null) {
+					if (favedSong.size() == 1) {
+						userLib.markSongFavorite(favedSong.get(0));
+					} else {
+						System.out.println("Multiple songs found in library, Please choose one:");
+						for (int i = 0; i < favedSong.size(); i++) {
+							System.out.println(i + ": " + favedSong.get(i));
+						}
+						int index = Integer.parseInt(scanner.nextLine());
+						if (index >= 0 && index < favedSong.size()) {
+							userLib.markSongFavorite(favedSong.get(0));
+						} else {
+							System.out.println("Invalid Selection.");
+						}
+					}
+					System.out.println("Song not found in Library");
+				}
 				System.out.println("Song marked as favorite.");
-				break;
+					break;
 			case 26:
 				// Rate a Song
-				System.out.print("Enter song title: ");
+				System.out.println("Enter song title: ");
 				String songToRate = scanner.nextLine();
-				System.out.print("Enter rating (1-5): ");
-				int rating = Integer.parseInt(scanner.nextLine());
-				model.rateSong(songToRate, rating);
-				System.out.println("Song rated.");
-				break;
+				List<Song> firstStepRate = userLib.searchSongsByTitle(songToRate);
+				if (firstStepRate != null) {
+					if (firstStepRate.size() == 1) {
+						System.out.println("Enter Rating 1 - 5: ");
+						int newRating = Integer.parseInt(scanner.nextLine());
+						Rating newlyRated = Rating.fromInt(newRating);
+						firstStepRate.get(0).setRating(newlyRated);
+						System.out.println("Song rated.");
+					} else {
+						System.out.println("Multiple songs found in library, Please choose one:");
+						for (int i = 0; i < firstStepRate.size(); i++) {
+							System.out.println(i + ": " + firstStepRate.get(i));
+						}
+						int index = Integer.parseInt(scanner.nextLine());
+						if (index >= 0 && index < firstStepRate.size()) {
+							System.out.println("Enter Rating 1 - 5: ");
+							int newRating = Integer.parseInt(scanner.nextLine());
+							Rating newlyRated = Rating.fromInt(newRating);
+							firstStepRate.get(index).setRating(newlyRated);
+							System.out.println("Song rated.");
+						} else {
+							System.out.println("Invalid Selection.");
+						}
+					}
+					System.out.println("Song not found in Library.");
+				}
+					break;
 			case 27:
 				// Play a Song
 				System.out.print("Enter song title: ");
 				String songToPlay = scanner.nextLine();
-				model.playSong(songToPlay);
+				ArrayList<Song> songsToPlay = userLib.searchSongsByTitle(songToPlay);
+				if (songsToPlay != null) {
+					if (songsToPlay.size() == 1) {
+						songsToPlay.get(0).incrementPlayCount();
+						System.out.println("Song played!");
+					} else {
+						for (int i = 0; i < songsToPlay.size(); i++) {
+							System.out.println(i + ": " + songsToPlay.get(i));
+						}
+						int index = Integer.parseInt(scanner.nextLine());
+						if (index >= 0 && index < songsToPlay.size()) {
+							songsToPlay.get(index).incrementPlayCount();
+							System.out.println("Song played!");
+						} else {
+							System.out.println("Invalid Selection.");
+						}
+					}
+					System.out.println("Song not found in Library");
+				}
 				break;
 			case 28:
 				// List 10 Most Recent Songs
@@ -430,43 +503,14 @@ public class LibraryView {
 				break;
 			case 33:
 				// Exit Program (Save Data)
-				model.saveData();
+				newUser.saveData();
 				System.out.println("Goodbye!");
-				running = false;
+				loggedIn = false;
 				break;
 			default:
 				System.out.println("Invalid option. Try again.");
 			}
 		}
 	}
-
-	private static void displaySongs(ArrayList<Song> songs) {
-		if (songs.isEmpty()) {
-			System.out.println("No songs found.");
-		} else {
-			for (Song song : songs) {
-				System.out.println(song);
-			}
-		}
-	}
-
-	private static void displayAlbums(ArrayList<Album> albums) {
-		if (albums.isEmpty()) {
-			System.out.println("No albums found.");
-		} else {
-			for (Album album : albums) {
-				System.out.println(album);
-			}
-		}
-	}
-
-	private static void displayPlaylists(ArrayList<Playlist> playlists) {
-		if (playlists.isEmpty()) {
-			System.out.println("No playlists found.");
-		} else {
-			for (Playlist playlist : playlists) {
-				System.out.println(playlist);
-			}
-		}
 	}
 }
