@@ -196,7 +196,7 @@ public class LibraryModel implements Serializable {
 		return allArtists;
 	}
 
-	// List All PLaylists in Library
+	// List All Playlists in Library
 	public ArrayList<Playlist> listAllPlaylists() {
 		ArrayList<Playlist> allPlaylists = new ArrayList<>();
 		for (Playlist playlists : userPlaylists.values()) {
@@ -374,6 +374,15 @@ public class LibraryModel implements Serializable {
 				genrePlaylist.getSongs().addAll(songsOfGenre);
 			}
 		}
+	}
+
+	// Get All Genre Playlist
+	public ArrayList<Playlist> getGenrePlaylists() {
+		ArrayList<Playlist> allGenrePlaylists = new ArrayList<>();
+		for (Playlist playlists : onlyGenrePlaylists.values()) {
+			allGenrePlaylists.add(playlists);
+		}
+		return allGenrePlaylists;
 	}
 
 	// Create Top Rated Song List
