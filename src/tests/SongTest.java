@@ -1,46 +1,108 @@
 package tests;
 
-import model.Song;
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import model.Album;
+import model.Rating;
+import model.Song;
+
+import java.util.Comparator;
 
 class SongTest {
+    private Song song1;
+    private Song song2;
+    private Song song3;
+    private Album album;
+    private Album albumTwo;
 
-    @Test
-    void testConstructor() {
-        Song song = new Song("Bohemian Rhapsody", "Queen", "A Night at the Opera");
-        assertEquals("Bohemian Rhapsody", song.getName());
-        assertEquals("Queen", song.getArtist());
-        assertFalse(song.getFavorite(), "New song should not be a favorite by default");
+    @BeforeEach
+    void setUp() {
+        album = new Album("Test Album", "The Rock");
+        albumTwo = new Album("Test Album 2", "Not The Rock");
+        album.setGenre("Rock");
+        song1 = new Song("Song A", "The Rock", album);
+        song2 = new Song("Song B", "The Rock", album);
+        song3 = new Song("Song A", "The Rock", albumTwo);
     }
 
     @Test
-    void testRate() {
-        Song song = new Song("Imagine", "John Lennon", "Imagine");
-        song.rate(4);
-        assertFalse(song.getFavorite(), "Song should not be favorite unless rated 5");
-
-        song.rate(5);
-        assertTrue(song.getFavorite(), "Song should become favorite when rated 5");
+    void testGetters() {
+        assertEquals("Song A", song1.getName());
+        assertEquals("The Rock", song1.getArtist());
+        assertEquals(album, song1.getAlbum());
+        assertEquals(Rating.noRating, song1.getRating());
+        assertEquals("Rock", song1.getGenre());
+        assertEquals(0, song1.getPlayCount());
     }
 
     @Test
-    void testFavorite() {
-        Song song = new Song("Let It Be", "The Beatles", "Let It Be");
-        assertFalse(song.getFavorite(), "New song should not be a favorite by default");
+    void testSetRating() {
+        song1.setRating(Rating.five);
+        assertEquals(Rating.five, song1.getRating());
+    }
 
-        song.favorite(true);
-        assertTrue(song.getFavorite(), "Song should be marked as favorite");
+    @Test
+    void testSetFavorite() {
+        song1.setFavorite(true);
+        assertTrue(song1.getFavorite());
+        song1.setFavorite(false);
+        assertFalse(song1.getFavorite());
+    }
 
-        song.favorite(false);
-        assertFalse(song.getFavorite(), "Song should no longer be marked as favorite");
+    @Test
+    void testIncrementPlayCount() {
+        song1.incrementPlayCount();
+        assertEquals(1, song1.getPlayCount());
+    }
+
+    @Test
+    void testSortByTitle() {
+        Comparator<Song> comparator = Song.sortByTitle;
+        assertTrue(comparator.compare(song1, song2) < 0);
+        assertEquals(0, comparator.compare(song1, song3));
+    }
+
+    @Test
+    void testSortByArtist() {
+        Comparator<Song> comparator = Song.sortByArtist;
+        assertFalse(comparator.compare(song2, song1) < 0);
+    }
+
+    @Test
+    void testSortByRating() {
+        song1.setRating(Rating.three);
+        song2.setRating(Rating.five);
+        Comparator<Song> comparator = Song.sortByRating;
+        assertTrue(comparator.compare(song1, song2) < 0);
+    }
+
+    @Test
+    void testSortByPlayCount() {
+        song1.incrementPlayCount();
+        song2.incrementPlayCount();
+        song2.incrementPlayCount();
+        Comparator<Song> comparator = Song.sortByPlayCount;
+        assertTrue(comparator.compare(song1, song2) < 0);
+    }
+
+    @Test
+    void testEquals() {
+        assertEquals(song1, song3);
+        assertNotEquals(song1, song2);
+        assertNotEquals(song1, null);
+        assertNotEquals(song1, "Some String");
+    }
+
+    @Test
+    void testHashCode() {
+        assertEquals(song1.hashCode(), song3.hashCode());
+        assertNotEquals(song1.hashCode(), song2.hashCode());
     }
 
     @Test
     void testToString() {
-        Song song = new Song("Hey Jude", "The Beatles", "Single");
-        song.rate(5);
-        String expected = "Title: Hey Jude, Album: Single, Artist: The Beatles, Rating: 5";
-        assertEquals(expected, song.toString());
+        assertEquals("Song A by The Rock, Test Album", song1.toString());
     }
 }

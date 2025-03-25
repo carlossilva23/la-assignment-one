@@ -20,27 +20,57 @@ public class LibraryView {
 	private static MusicStore store =  new MusicStore();
 	private static UserManager userManager = new UserManager();
 	private static Scanner scanner = new Scanner(System.in);
+	private static User user;
 
 	public static void main(String[] args) {
 		boolean loggedIn = false;
-		userManager.loadUsers();
-
+		
 		// Login or Create User
 		while (!loggedIn) {
 			System.out.println("=== Welcome to the Music Library ===");
-			System.out.print("Enter your username: ");
-			String username = scanner.nextLine();
+			System.out.println("1. Login");
+			System.out.println("2. Create Account");
+			System.out.println("3. Exit");
+			System.out.print("Please select an option ");
+			String choice = scanner.nextLine();
 
-			System.out.print("Enter your password: ");
-			String password = scanner.nextLine();
-			User newUser =  new User(username, password);
-			try {
-				if (UserManager.users)
-			} catch (Exception e){
-			User newUser = userManager.createUser(username, password);
-			System.out.println("New User Created.");
+			switch (choice) {
+			case "1":
+				System.out.print("Enter your username: ");
+				String username = scanner.nextLine();
+				System.out.print("Enter your password: ");
+				String password = scanner.nextLine();
+				user = userManager.loginUser(username, password);
+				if (user != null) {
+					System.out.println("Login successful. Welcome, " + username + "!");
+					loggedIn = true;
+				} else {
+					System.out.println("Login failed. Please check your username and password.");
+				}
+				break;
+			case "2":
+				System.out.print("Enter a new username: ");
+				String newUsername = scanner.nextLine();
+				System.out.print("Enter a new password: ");
+				String newPassword = scanner.nextLine();
+				user = userManager.createUser(newUsername, newPassword);
+				if (user != null) {
+					System.out.println("New user created. Welcome!");
+					loggedIn = true;
+				} else {
+					System.out.println("User creation failed. Username already exists.");
+				} 
+				break;
+			case "3":
+				System.out.println("Exiting the program. Goodbye!");
+				userManager.saveUsers();
+				System.exit(0);
+				break;
+				
+			default:
+				System.out.println("Invalid option. Please choose 1, 2, or 3");
 			}
-			loggedIn = true;
+		}
 
 		// Main Menu
 		boolean running = true;
@@ -82,7 +112,7 @@ public class LibraryView {
 			System.out.println("33. Log Out");
 			System.out.print("Enter your choice: ");
 
-			LibraryModel userLib = newUser.getLibrary();
+			LibraryModel userLib = user.getLibrary();
 			int choice = Integer.parseInt(scanner.nextLine());
 			switch (choice) {
 			case 0:
@@ -117,7 +147,7 @@ public class LibraryView {
 				String storeAlbumTitle = scanner.nextLine();
 				ArrayList<Album> storeAlbum = store.searchAlbumByTitle(storeAlbumTitle);
 				if (storeAlbum != null) {
-					System.out.println(storeAlbum);
+					System.out.println(storeAlbum.get(0));
 				} else {
 					System.out.println("Album not found in Music Store.");
 				}
@@ -147,7 +177,7 @@ public class LibraryView {
 				System.out.println("Enter song title: ");
 				String libSongTitle = scanner.nextLine();
 				ArrayList<Song> libSongs = userLib.searchSongsByTitle(libSongTitle);
-				if (libSongs != null) {
+				if (!libSongs.isEmpty()) {
 					for (Song song : libSongs) {
 						System.out.println(song);
 					}
@@ -160,7 +190,7 @@ public class LibraryView {
 				System.out.println("Enter artist name: ");
 				String libArtist = scanner.nextLine();
 				ArrayList<Song> libSongsByArtist = userLib.searchSongByArtist(libArtist);
-				if (libSongsByArtist != null) {
+				if (!libSongsByArtist.isEmpty()) {
 					for (Song song : libSongsByArtist) {
 						System.out.println(song);
 					}
@@ -185,11 +215,9 @@ public class LibraryView {
 				// Search for Albums By Title in Library
 				System.out.println("Enter album title: ");
 				String libAlbumTitle = scanner.nextLine();
-				ArrayList<Album> libAlbumsByTitle = userLib.searchAlbumByTitle(libAlbumTitle);
-				if (libAlbumsByTitle != null) {
-					for (Album album : libAlbumsByTitle) {
-						System.out.println(album);
-					}
+				UserAlbum libAlbumByTitle = userLib.searchAlbumByTitle(libAlbumTitle);
+				if (libAlbumByTitle != null) {
+					System.out.println(libAlbumByTitle);
 				} else {
 					System.out.println("Album not found in library");
 				}
@@ -198,9 +226,9 @@ public class LibraryView {
 				// Search Albums By Artist in Library
 				System.out.println("Enter album artist: ");
 				String libAlbumArtist = scanner.nextLine();
-				ArrayList<Album> libAlbumsByArtist = userLib.searchAlbumByArtist(libAlbumArtist);
-				if (libAlbumsByArtist != null) {
-					for (Album album : libAlbumsByArtist) {
+				ArrayList<UserAlbum> libAlbumsByArtist = userLib.searchAlbumByArtist(libAlbumArtist);
+				if (!libAlbumsByArtist.isEmpty()) {
+					for (UserAlbum album : libAlbumsByArtist) {
 						System.out.println(album);
 					}
 				} else {
@@ -223,10 +251,10 @@ public class LibraryView {
 				System.out.println("Enter song title: ");
 				String songName = scanner.nextLine();
 				ArrayList<Song> storeSearchSong = store.searchSongByTitle(songName);
-				if (storeSearchSong != null) {
+				if (!storeSearchSong.isEmpty()){
 					if (storeSearchSong.size() == 1) {
 						userLib.addSong(storeSearchSong.get(0));
-					} else {
+					} else if (storeSearchSong.size() > 1) {
 						System.out.println("Multiple songs found in store, Please choose one:");
 						for (int i = 0; i <storeSearchSong.size(); i++) {
 							System.out.println(i + ": " + storeSearchSong.get(i));
@@ -339,6 +367,7 @@ public class LibraryView {
 					ArrayList<Song> songsFound = userLib.searchSongsByTitle(songToAddToPlaylist);
 					if (songsFound.size() == 1) {
 						userLib.addSongToPlaylist(playlistFound, songsFound.get(0));
+						System.out.println("Song added to playlist.");
 					} else {
 						System.out.println("Multiple songs found in library, Please choose one:");
 						for (int i = 0; i < songsFound.size(); i++) {
@@ -347,13 +376,14 @@ public class LibraryView {
 						int index = Integer.parseInt(scanner.nextLine());
 						if (index >= 0 && index < songsFound.size()) {
 							userLib.addSongToPlaylist(playlistFound, songsFound.get(index));
+							System.out.println("Song added to playlist.");
 						} else {
 							System.out.println("Invalid Selection.");
 						}
 					}
+				} else {
 					System.out.println("Playlist not found.");
 				}
-				System.out.println("Song added to playlist.");
 				break;
 			case 24:
 				// Remove Song from Playlist
@@ -365,7 +395,7 @@ public class LibraryView {
 					String songToRemoveFromPlaylist = scanner.nextLine();
 					ArrayList<Song> songsFound = userLib.searchSongsByTitle(songToRemoveFromPlaylist);
 					if (songsFound.size() == 1) {
-						userLib.removeSongFromPlaylist(playlistFound, songsFound.get(0));
+						userLib.removeSongFromPlaylist(foundPlaylist, songsFound.get(0));
 					} else {
 						System.out.println("Multiple songs found in library, Please choose one:");
 						for (int i = 0; i < songsFound.size(); i++) {
@@ -373,7 +403,7 @@ public class LibraryView {
 						}
 						int index = Integer.parseInt(scanner.nextLine());
 						if (index >= 0 && index < songsFound.size()) {
-							userLib.removeSongFromPlaylist(playlistFound, songsFound.get(index));
+							userLib.removeSongFromPlaylist(foundPlaylist, songsFound.get(index));
 						} else {
 							System.out.println("Invalid Selection.");
 						}
@@ -434,6 +464,7 @@ public class LibraryView {
 							System.out.println("Invalid Selection.");
 						}
 					}
+				} else {
 					System.out.println("Song not found in Library.");
 				}
 					break;
@@ -442,7 +473,7 @@ public class LibraryView {
 				System.out.print("Enter song title: ");
 				String songToPlay = scanner.nextLine();
 				ArrayList<Song> songsToPlay = userLib.searchSongsByTitle(songToPlay);
-				if (songsToPlay != null) {
+				if (!songsToPlay.isEmpty()) {
 					if (songsToPlay.size() == 1) {
 						songsToPlay.get(0).incrementPlayCount();
 						System.out.println("Song played!");
@@ -458,6 +489,7 @@ public class LibraryView {
 							System.out.println("Invalid Selection.");
 						}
 					}
+				} else {
 					System.out.println("Song not found in Library");
 				}
 				break;
@@ -486,31 +518,43 @@ public class LibraryView {
 					System.out.println("No genres have at least 10 songs in Library.");
 				}
 				break;
-			// Fix All Below 
 			case 31:
 				// Remove Song from Library
-				System.out.print("Enter song title to remove: ");
+				System.out.println("Enter song title to remove: ");
 				String songToRemove = scanner.nextLine();
-				model.removeSong(songToRemove);
+				ArrayList<Song> songsToRemove = userLib.searchSongsByTitle(songToRemove);
+				if (songsToRemove.size() == 1) {
+					userLib.removeSong(songsToRemove.get(0));
+				} else {
+					System.out.println("Multiple songs found in library, Please choose one:");
+					for (int i = 0; i < songsToRemove.size(); i++) {
+						System.out.println(i + ": " + songsToRemove.get(i));
+					}
+					int index = Integer.parseInt(scanner.nextLine());
+					if (index >= 0 && index < songsToRemove.size()) {
+						userLib.removeSong(songsToRemove.get(index));
+					} else {
+						System.out.println("Invalid Selection.");
+					}
+				}
 				System.out.println("Song removed from library.");
 				break;
 			case 32:
 				// Remove Album from Library
 				System.out.print("Enter album title to remove: ");
 				String albumToRemove = scanner.nextLine();
-				model.removeAlbum(albumToRemove);
+				UserAlbum albumsToRemove = userLib.searchAlbumByTitle(albumToRemove);
+				userLib.removeAlbum(albumsToRemove.getAlbum());
 				System.out.println("Album removed from library.");
 				break;
 			case 33:
 				// Exit Program (Save Data)
-				newUser.saveData();
-				System.out.println("Goodbye!");
+				System.out.println("Logging Out. Goodbye!");
 				loggedIn = false;
 				break;
 			default:
 				System.out.println("Invalid option. Try again.");
 			}
 		}
-	}
 	}
 }

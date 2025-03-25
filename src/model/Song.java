@@ -43,6 +43,11 @@ public class Song {
 	public int getPlayCount() {
 		return playCount;
 	}
+	
+	// Helper Method for Tests
+	public boolean getFavorite() {
+		return favorite;
+	}
 
 	public void setRating(Rating rating) {
 		this.rating = rating;

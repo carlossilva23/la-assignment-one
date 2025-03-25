@@ -18,7 +18,7 @@ public class Playlist {
 	}
 
 	public void addSong(Song song) {
-		if (songs.contains(song)) {
+		if (!songs.contains(song)) {
 			songs.add(song);
 		}
 	}
@@ -53,7 +53,7 @@ public class Playlist {
 		StringBuilder sb = new StringBuilder();
 		sb.append(name).append(":\n");
 		for (Song song : songs) {
-			sb.append(" - ").append(song.toString());
+			sb.append(" - ").append(song.toString()).append("/n");
 		}
 		return sb.toString();
 	}

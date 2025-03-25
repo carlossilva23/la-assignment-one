@@ -67,22 +67,21 @@ public class LibraryModel implements Serializable {
 	}
 
 	// Searches Library for Album By Title
-	public ArrayList<Album> searchAlbumByTitle(String title) {
-		ArrayList<Album> matches = new ArrayList<>();
-		for (Album albums : userAlbums.keySet()) {
-			if (albums.getName().equalsIgnoreCase(title)) {
-				matches.add(albums);
+	public UserAlbum searchAlbumByTitle(String title) {
+		for (Album album : userAlbums.keySet()) {
+			if (album.getName().equalsIgnoreCase(title)) {
+				return userAlbums.get(album);
 			}
 		}
-		return matches;
+		return null;
 	}
 
 	// Search Library for Album By Artist
-	public ArrayList<Album> searchAlbumByArtist(String artist) {
-		ArrayList<Album> matches = new ArrayList<>();
+	public ArrayList<UserAlbum> searchAlbumByArtist(String artist) {
+		ArrayList<UserAlbum> matches = new ArrayList<>();
 		for (Album albums : userAlbums.keySet()) {
 			if (albums.getArtist().equalsIgnoreCase(artist)) {
-				matches.add(albums);
+				matches.add(userAlbums.get(albums));
 			}
 		}
 		return matches;
@@ -106,6 +105,7 @@ public class LibraryModel implements Serializable {
 
 			if (song.getAlbum().equals(album)) {
 				userAlbum.addSong(song);
+				userSongs.add(song);
 				return;
 			}
 		}
@@ -113,6 +113,7 @@ public class LibraryModel implements Serializable {
 		Album songAlbum = song.getAlbum();
 		UserAlbum newUserAlbum = new UserAlbum(songAlbum);
 		newUserAlbum.addSong(song);
+		userSongs.add(song);
 
 		userAlbums.put(songAlbum, newUserAlbum);
 		checkAndCreateGenrePlaylist();
@@ -253,7 +254,7 @@ public class LibraryModel implements Serializable {
 	// Add Song to Playlist
 	public void addSongToPlaylist(Playlist playlist, Song song) {
 		for (Playlist playlists : userPlaylists.values()) {
-			if (playlists.equals(playlist)) {
+			if (playlists.getName().equalsIgnoreCase(playlist.getName())) {
 				playlists.addSong(song);
 			}
 		}
@@ -324,12 +325,10 @@ public class LibraryModel implements Serializable {
 
 	// Shuffles Songs in Library
 	public List<Song> shuffleLibrary() {
-		List<Song> allSongs = new ArrayList<>();
-		for (UserAlbum userAlbum : userAlbums.values()) {
-			allSongs.addAll(userAlbum.getSongs());
-		}
-
 		List<Song> shuffledSongs = new ArrayList<>();
+		for (Song songs : userSongs) {
+			shuffledSongs.add(songs);
+		}
 		Collections.shuffle(shuffledSongs);
 		return shuffledSongs;
 	}
