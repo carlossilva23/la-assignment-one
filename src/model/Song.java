@@ -108,6 +108,6 @@ public class Song {
 
 	@Override
 	public String toString() {
-		return name + " by " + artist + ", " + album.getName();
+		return name + " by " + artist + ", " + album.getName() + "\nRating: " + rating + "Number of Times Played: " + playCount;
 	}
 }

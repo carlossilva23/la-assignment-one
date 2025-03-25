@@ -15,7 +15,7 @@ import model.User;
 import model.UserAlbum;
 import model.UserManager;
 
-public class LibraryView {
+public class LibraryView { 
 
 	private static MusicStore store =  new MusicStore();
 	private static UserManager userManager = new UserManager();
@@ -508,6 +508,12 @@ public class LibraryView {
 				}
 				break;
 			case 30:
+				// List Top Rated Songs
+				List<Song> topRatedSongs = userLib.getTopRated();
+				for (Song song : topRatedSongs) {
+					System.out.println(song);
+				}
+			case 31:
 				// List Genre Playlists (If Any)
 				ArrayList<Playlist> genrePlaylists = userLib.getGenrePlaylists();
 				if (!genrePlaylists.isEmpty()) {
@@ -518,28 +524,31 @@ public class LibraryView {
 					System.out.println("No genres have at least 10 songs in Library.");
 				}
 				break;
-			case 31: 
+			case 32: 
 				// Remove Song from Library
 				System.out.println("Enter song title to remove: ");
 				String songToRemove = scanner.nextLine();
 				ArrayList<Song> songsToRemove = userLib.searchSongsByTitle(songToRemove);
-				if (songsToRemove.size() == 1) {
-					userLib.removeSong(songsToRemove.get(0));
-				} else {
-					System.out.println("Multiple songs found in library, Please choose one:");
-					for (int i = 0; i < songsToRemove.size(); i++) {
-						System.out.println(i + ": " + songsToRemove.get(i));
-					}
-					int index = Integer.parseInt(scanner.nextLine());
-					if (index >= 0 && index < songsToRemove.size()) {
-						userLib.removeSong(songsToRemove.get(index));
+				if (!songsToRemove.isEmpty()) {
+					if (songsToRemove.size() == 1) {
+						userLib.removeSong(songsToRemove.get(0));
 					} else {
-						System.out.println("Invalid Selection.");
+						System.out.println("Multiple songs found in library, Please choose one:");
+						for (int i = 0; i < songsToRemove.size(); i++) {
+							System.out.println(i + ": " + songsToRemove.get(i));
+						}
+						int index = Integer.parseInt(scanner.nextLine());
+						if (index >= 0 && index < songsToRemove.size()) {
+							userLib.removeSong(songsToRemove.get(index));
+						} else {
+							System.out.println("Invalid Selection.");
+						}
 					}
+					System.out.println("Song not in Library");
 				}
 				System.out.println("Song removed from library.");
 				break;
-			case 32:
+			case 33:
 				// Remove Album from Library
 				System.out.print("Enter album title to remove: ");
 				String albumToRemove = scanner.nextLine();
@@ -547,7 +556,7 @@ public class LibraryView {
 				userLib.removeAlbum(albumsToRemove.getAlbum());
 				System.out.println("Album removed from library.");
 				break;
-			case 33:
+			case 34:
 				// Exit Program (Save Data)
 				System.out.println("Logging Out. Goodbye!");
 				loggedIn = false;

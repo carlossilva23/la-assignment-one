@@ -31,7 +31,7 @@ public class LibraryModel implements Serializable {
 		this.recentlyPlayed = new LinkedList<>();
 		this.frequentPlayedSongs = new HashMap<>();
 		this.topRated = new ArrayList<>();
-	}
+	} 
 
 	// Searches Library for Song By Title
 	public ArrayList<Song> searchSongsByTitle(String title) {
@@ -124,12 +124,17 @@ public class LibraryModel implements Serializable {
 		if (!userAlbums.containsKey(album)) {
 			UserAlbum userAlbum = new UserAlbum(album);
 			userAlbums.put(album, userAlbum);
+			for (Song songs : album.getSongs()) {
+				userAlbum.addSong(songs);
+				userSongs.add(songs);
+			}
 		} else {
 			UserAlbum userAlbum = userAlbums.get(album);
 
 			if (userAlbum.getSongs().size() != album.getSongs().size()) {
 				for (Song song : album.getSongs()) {
 					userAlbum.addSong(song);
+					userSongs.add(song);
 				}
 			}
 		}
@@ -140,7 +145,7 @@ public class LibraryModel implements Serializable {
 	public void removeSong(Song song) {
 		for (UserAlbum userAlbum : userAlbums.values()) {
 			if (userAlbum.getSongs().contains(song)) {
-				userAlbum.getSongs().remove(song);
+				userAlbum.remove(song);
 			}
 		}
 		for (Playlist playlist : userPlaylists.values()) {
@@ -156,6 +161,7 @@ public class LibraryModel implements Serializable {
 			topRated.remove(song);
 		}
 		frequentPlayedSongs.remove(song);
+		userSongs.remove(song);
 		checkAndCreateGenrePlaylist();
 	}
 

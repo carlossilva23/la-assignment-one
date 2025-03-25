@@ -15,7 +15,7 @@ public class UserAlbum {
 			userSongs.add(null);
 		} 
 	}
-
+ 
 	public Album getAlbum() {
 		return album;
 	}
@@ -24,6 +24,12 @@ public class UserAlbum {
 		int index = album.getSongs().indexOf(song);
 		if (index != -1 && userSongs.get(index) == null) {
 			userSongs.set(index, song);
+		}
+	}
+	
+	public void remove(Song song) {
+		if (userSongs.contains(song)) {
+			userSongs.remove(song);
 		}
 	}
 
