@@ -13,7 +13,7 @@ public class UserAlbum {
 		this.userSongs = new ArrayList<>();
 		for (int i = 0; i < album.getSongs().size(); i++) {
 			userSongs.add(null);
-		}
+		} 
 	}
 
 	public Album getAlbum() {

@@ -518,7 +518,7 @@ public class LibraryView {
 					System.out.println("No genres have at least 10 songs in Library.");
 				}
 				break;
-			case 31:
+			case 31: 
 				// Remove Song from Library
 				System.out.println("Enter song title to remove: ");
 				String songToRemove = scanner.nextLine();
