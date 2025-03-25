@@ -117,24 +117,4 @@ public class MusicStore {
 		}
 		return allAlbums;
 	}
-
-	// Adds Song to Library (Check if Exists)
-	public void passSongToLibrary(Song song, LibraryModel userLibrary) {
-		for (Album albums : store.values()) {
-			for (Song songsList : albums.getSongs()) {
-				if (song.equals(songsList)) {
-					userLibrary.addSong(song);
-				}
-			}
-		}
-	}
-
-	// Adds Album to Library (Check if Exists)
-	public void passAlbumToLibrary(Album album, LibraryModel userLibrary) {
-		for (Album albumList : store.values()) {
-			if (album.equals(albumList)) {
-				userLibrary.addAlbum(album);
-			}
-		}
-	}
 }
