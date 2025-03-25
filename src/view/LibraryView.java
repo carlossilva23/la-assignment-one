@@ -15,6 +15,8 @@ import model.User;
 import model.UserAlbum;
 import model.UserManager;
 
+
+
 public class LibraryView {
 
 	private static MusicStore store =  new MusicStore();
@@ -103,7 +105,7 @@ public class LibraryView {
 			System.out.println("27. Play a Song");
 			System.out.println("28. List 10 Most Recent Songs");
 			System.out.println("29. List 10 Most Played Songs");
-			System.out.println("30. List Top Rated");
+			System.out.println("30. List Top Rated Songs");
 			System.out.println("31. List Genre Playlists (If Any)");
 			System.out.println("32. Remove Song from Library");
 			System.out.println("33. Remove Album from Library");
