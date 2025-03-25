@@ -15,7 +15,7 @@ import model.User;
 import model.UserAlbum;
 import model.UserManager;
 
-public class LibraryView { 
+public class LibraryView {    
 
 	private static MusicStore store =  new MusicStore();
 	private static UserManager userManager = new UserManager();
@@ -106,10 +106,11 @@ public class LibraryView {
 			System.out.println("27. Play a Song");
 			System.out.println("28. List 10 Most Recent Songs");
 			System.out.println("29. List 10 Most Played Songs");
-			System.out.println("30. List Genre Playlists (If Any)");
-			System.out.println("31. Remove Song from Library");
-			System.out.println("32. Remove Album from Library");
-			System.out.println("33. Log Out");
+			System.out.println("30. List Top Rated Songs");
+			System.out.println("31. List Genre Playlists (If Any)");
+			System.out.println("32. Remove Song from Library");
+			System.out.println("33. Remove Album from Library");
+			System.out.println("34. Log Out");
 			System.out.print("Enter your choice: ");
 
 			LibraryModel userLib = user.getLibrary();
